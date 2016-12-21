@@ -53,14 +53,14 @@
         
         <li class="menu-item">
           <a class="menu-item-link" href="/">
-            Home
+            首页
           </a>
         </li>
       
         
         <li class="menu-item">
           <a class="menu-item-link" href="/archives/">
-            Archives
+            归档
           </a>
         </li>
       
@@ -85,12 +85,12 @@
     
       
       <a class="mobile-menu-item" href="/">
-        Home
+        首页
       </a>
     
       
       <a class="mobile-menu-item" href="/archives/">
-        Archives
+        归档
       </a>
     
   </nav>
@@ -114,7 +114,7 @@
 
       <div class="post-meta">
         <span class="post-time">
-          Dec 21, 2016
+          2016年12月21日
         </span>
       </div>
     </header>
@@ -133,7 +133,7 @@
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">type Context struct &#123;</div><div class="line">	// 处理请求头，数据，cookie，body，它还包含路由参数和当前的session</div><div class="line">	Input          *BeegoInput</div><div class="line">	// 发送响应头</div><div class="line">	Output         *BeegoOutput</div><div class="line">	Request        *http.Request</div><div class="line">	ResponseWriter *Response</div><div class="line">	_xsrfToken     string</div><div class="line">&#125;</div></pre></td></tr></table></figure>
           <div class="read-more">
-            <a href="/2016/12/21/beego启动流程-context-Context/" class="read-more-link">Read more..</a>
+            <a href="/2016/12/21/beego启动流程-context-Context/" class="read-more-link">阅读更多</a>
           </div>
         
       
@@ -154,7 +154,7 @@
 
       <div class="post-meta">
         <span class="post-time">
-          Dec 21, 2016
+          2016年12月21日
         </span>
       </div>
     </header>
@@ -176,7 +176,7 @@
 <p>其中http.Server{}有个字段是Handler类型，这个Handler是一个接口里面只有一个函数声明，即：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">type Handler interface &#123;</div><div class="line">	ServeHTTP(ResponseWriter, *Request)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
           <div class="read-more">
-            <a href="/2016/12/21/beego启动流程-ControllerRegister如何注册到go内部/" class="read-more-link">Read more..</a>
+            <a href="/2016/12/21/beego启动流程-ControllerRegister如何注册到go内部/" class="read-more-link">阅读更多</a>
           </div>
         
       
@@ -197,7 +197,7 @@
 
       <div class="post-meta">
         <span class="post-time">
-          Dec 21, 2016
+          2016年12月21日
         </span>
       </div>
     </header>
@@ -217,7 +217,7 @@
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">// 我们在对项目进行init的时候，选择的是开发环境，因此debug为ture，env为dev</div><div class="line">defined(&apos;YII_DEBUG&apos;) or define(&apos;YII_DEBUG&apos;, true);</div><div class="line">defined(&apos;YII_ENV&apos;) or define(&apos;YII_ENV&apos;, &apos;dev&apos;);</div><div class="line"></div><div class="line">// 引入composer的自动加载文件</div><div class="line">require(__DIR__ . &apos;/../../vendor/autoload.php&apos;);</div><div class="line">// 引入了Yii2的启动文件，这个文件做了以下几件事情</div><div class="line">// 1. 注册了Yii2自动加载机制，并优先使用Yii2自动加载机制</div><div class="line">// 2. 引入了classes.php文件，限定名称 =&gt; 类的物理路径之间的映射关系</div><div class="line">// 3. Yii::$container，实例化这个依赖注入容器，在一次请求过程中，这个属性是全局唯一的，这个依赖注入容器以后会详细说明</div><div class="line">require(__DIR__ . &apos;/../../vendor/yiisoft/yii2/Yii.php&apos;);</div><div class="line">// 这个文件会向Yii::$aliases追加@common,@frontend,@backend,@console</div><div class="line">// 与之相对应的物理路径，当然我们也可以根据需要添加相应的映射</div><div class="line">require(__DIR__ . &apos;/../../common/config/bootstrap.php&apos;);</div><div class="line">// 与上面的文件功能一致，这个是各自应用独有的，上面是每个应用公用的</div><div class="line">require(__DIR__ . &apos;/../config/bootstrap.php&apos;);</div><div class="line"></div><div class="line">// 整理出yii\web\Application类所需要的格式的配置</div><div class="line">// 从这几个合并的顺序可以看出，应用下的配置会覆盖公共配置</div><div class="line">// -local.php会覆盖.php配置</div><div class="line">$config = yii\helpers\ArrayHelper::merge(</div><div class="line">    require(__DIR__ . &apos;/../../common/config/main.php&apos;),</div><div class="line">    require(__DIR__ . &apos;/../../common/config/main-local.php&apos;),</div><div class="line">    require(__DIR__ . &apos;/../config/main.php&apos;),</div><div class="line">    require(__DIR__ . &apos;/../config/main-local.php&apos;)</div><div class="line">);</div><div class="line"></div><div class="line">// 实例化web application实例</div><div class="line">$application = new yii\web\Application($config);</div><div class="line">// 运行，就是这么优美地运行起来了</div><div class="line">$application-&gt;run();</div></pre></td></tr></table></figure>
           <div class="read-more">
-            <a href="/2016/12/21/Yii2启动流程/" class="read-more-link">Read more..</a>
+            <a href="/2016/12/21/Yii2启动流程/" class="read-more-link">阅读更多</a>
           </div>
         
       
@@ -238,7 +238,7 @@
 
       <div class="post-meta">
         <span class="post-time">
-          Dec 21, 2016
+          2016年12月21日
         </span>
       </div>
     </header>
@@ -260,7 +260,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">composer install</div></pre></td></tr></table></figure>
 <p>这个过程可能会很漫长，国外的资源，建议翻墙。</p>
           <div class="read-more">
-            <a href="/2016/12/21/Yii2环境搭建/" class="read-more-link">Read more..</a>
+            <a href="/2016/12/21/Yii2环境搭建/" class="read-more-link">阅读更多</a>
           </div>
         
       
@@ -281,7 +281,7 @@
 
       <div class="post-meta">
         <span class="post-time">
-          Dec 21, 2016
+          2016年12月21日
         </span>
       </div>
     </header>
@@ -307,7 +307,7 @@
 <li>公共的main-local.php会覆盖公共的main.php</li>
 </ol>
           <div class="read-more">
-            <a href="/2016/12/21/Yii2配置文件/" class="read-more-link">Read more..</a>
+            <a href="/2016/12/21/Yii2配置文件/" class="read-more-link">阅读更多</a>
           </div>
         
       
@@ -328,7 +328,7 @@
 
       <div class="post-meta">
         <span class="post-time">
-          Dec 21, 2016
+          2016年12月21日
         </span>
       </div>
     </header>
@@ -345,7 +345,7 @@
           <h3 id="Beego-Session"><a href="#Beego-Session" class="headerlink" title="Beego Session"></a>Beego Session</h3><p>我们知道，beego在跑起来之前，调用了<strong>initBeforeHTTPRun()</strong>这个函数。beego定义了一个全局不可导出的变量<strong>hooks</strong>，这是一个切片，每个元素的类型是func() error，那么前面那个函数就往<strong>hooks</strong>切片中追加元素，追加完成之后，会遍历<strong>hooks</strong>切片，由于切片每一个元素都是函数类型，因此可以直接调用，<strong>hooks</strong>切片中有这些元素：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">func registerMime() error</div><div class="line">func registerDefaultErrorHandler() error</div><div class="line">func registerSession() error</div><div class="line">func registerTemplate() error</div><div class="line">func registerAdmin() error</div><div class="line">func registerGzip() error</div></pre></td></tr></table></figure>
           <div class="read-more">
-            <a href="/2016/12/21/beego启动流程-SESSION/" class="read-more-link">Read more..</a>
+            <a href="/2016/12/21/beego启动流程-SESSION/" class="read-more-link">阅读更多</a>
           </div>
         
       
@@ -366,7 +366,7 @@
 
       <div class="post-meta">
         <span class="post-time">
-          Dec 21, 2016
+          2016年12月21日
         </span>
       </div>
     </header>
@@ -385,7 +385,7 @@
 <p>接下来定义了4个可导出的全局变量和两个不可导出的全局变量，如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">var (</div><div class="line">	// 应用的主体配置，即我们用bee工具新建的或者手动创建的应用</div><div class="line">	BConfig *Config</div><div class="line">	// beegoAppConfig依赖innerConfig字段来从配置文件中获取和设置值，即实现了config.Conffiger接口的对象</div><div class="line">	// 从下面的newAppConfig()函数中可以了解到，innerConfig就是config.IniConfig&#123;&#125;的实例</div><div class="line">	// 具体如何实现，可以去了解config.IniConfig具体方法的实现</div><div class="line">	AppConfig *beegoAppConfig</div><div class="line">	// 应用的绝对路径</div><div class="line">	AppPath string</div><div class="line">	// session.Manager的实例</div><div class="line">	GlobalSessions *session.Manager</div><div class="line">	// 应用配置文件的路径</div><div class="line">	appConfigPath string</div><div class="line">	// 这个变量是没有办法从外部更改的，除非强行改这里的代码，默认是ini provider</div><div class="line">	appConfigProvider = &quot;ini&quot;</div><div class="line">)</div></pre></td></tr></table></figure>
           <div class="read-more">
-            <a href="/2016/12/21/beego启动流程-配置/" class="read-more-link">Read more..</a>
+            <a href="/2016/12/21/beego启动流程-配置/" class="read-more-link">阅读更多</a>
           </div>
         
       
@@ -445,11 +445,11 @@
 
 <div class="copyright">
   <span class="power-by">
-    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
   </span>
   
   <span class="theme-info">
-    Theme - 
+    主题 - 
     <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
   </span>
 
