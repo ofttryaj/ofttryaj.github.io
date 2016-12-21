@@ -136,6 +136,7 @@
 <li>context.Context结构体:</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">type Context struct &#123;</div><div class="line">	// 处理请求头，数据，cookie，body，它还包含路由参数和当前的session</div><div class="line">	Input          *BeegoInput</div><div class="line">	// 发送响应头</div><div class="line">	Output         *BeegoOutput</div><div class="line">	Request        *http.Request</div><div class="line">	ResponseWriter *Response</div><div class="line">	_xsrfToken     string</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<a id="more"></a>
 <ul>
 <li><p>Request，ResponseWriter字段都是由go内部根据请求创建的request，response对象传过来的，这两个对象提供了一系列跟HTTP请求相关的方法，比如判断请求方式（GET，POST），获取请求头，cookie相关的操作等等，这些方法会体现在BeegoInput，BeegoOupt方法集中；<br>Request字段是go内核中的http.Request类型，但是ResponseWriter字段，则依赖context.Response中匿名字段http.ResponseWriter的具体实现，我通过看go内核源码，可以知道，http.Resposne实现了http.ResponseWirter，并且我们也知道go内部也是创建了http.Response并且通过beego.ControllerRegister.ServeHTTP(w, req)传入的，可以看考我之前写的文章<a href="http://aj.gitgang.com/?p=106" target="_blank" rel="external">beego.ControllerRegister如何注册到go内部的</a>，对request，response的大部分操作，本质上还是go内核中的http.Request，http.Response对象提供的相关方法；</p>
 </li>
