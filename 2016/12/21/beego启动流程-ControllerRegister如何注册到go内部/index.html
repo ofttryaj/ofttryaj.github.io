@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="beego启动流程-ControllerRegister如何注册到go内部"/>
+
+
+
+
+  <meta name="keywords" content="go,beego," />
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="big gang silk">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.0.0" />
+
+
+
+<link rel="canonical" href="https://ofttryaj.github.io/2016/12/21/beego启动流程-ControllerRegister如何注册到go内部/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.0" />
+
+
+
+  
+
+
+
+    <title> beego启动流程-ControllerRegister如何注册到go内部 · big gang silk </title>
+  </head>
+
+  <body>
+    <div class="container">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">big gang silk</a>
+</div>
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            Archives
+          </a>
+        </li>
+      
+      
+    </ul>
+  
+</nav>
+
+<div class="mobile-navbar">
+  <div class="mobile-header">
+    <div class="mobile-header-logo">
+      <a href="/." class="logo">big gang silk</a>
+    </div>
+
+    <div class="mobile-header-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+  <nav class="mobile-menu">
+    
+      
+      <a class="mobile-menu-item" href="/">
+        Home
+      </a>
+    
+      
+      <a class="mobile-menu-item" href="/archives/">
+        Archives
+      </a>
+    
+  </nav>
+</div>
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          beego启动流程-ControllerRegister如何注册到go内部
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          Dec 21, 2016
+        </span>
+      </div>
+    </header>
+
+    
+      <div class="post-toc" id="post-toc">
+        <h2 class="post-toc-title">Contents</h2>
+        <div class="post-toc-content">
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#beego-ControllerRegister"><span class="toc-text">beego.ControllerRegister</span></a></li></ol>
+        </div>
+      </div>
+    
+
+    <div class="post-content">
+      
+        <h1 id="beego-ControllerRegister"><a href="#beego-ControllerRegister" class="headerlink" title="beego.ControllerRegister"></a>beego.ControllerRegister</h1><blockquote>
+<p>这里主要是讲了beego如何将自定义路由处理传递给http.Server.Hanlder字段的，并且理解Go内部是如何调用ControllerRegister.ServeHTTP()方法的。具体深入到ControllerRegister是如何处理路由的，有待进一步学习。</p>
+</blockquote>
+<p>在beego包中的app.go文件中定义了一个init()函数，这个方法就干了一件事情，就是创建一个App，赋值给一个全局可导出的BeeApp变量，App结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">type App struct &#123;</div><div class="line">	Handlers *ControllerRegister</div><div class="line">	Server   *http.Server</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中http.Server{}有个字段是Handler类型，这个Handler是一个接口里面只有一个函数声明，即：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">type Handler interface &#123;</div><div class="line">	ServeHTTP(ResponseWriter, *Request)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>在这里我们注意到了App结构体中也一个Handlers字段，这个字段的类型就是Beego框架自定义的一个类型，就是ControllerRegister，这个结构体实现了Handler接口，即实现了ServeHTTP(ResponseWriter, *Request)这个函数，这个稍后会说到为什么解释这些。<br>接下来我们看beego包下的app.go中的run()方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">app.Server.Handler = app.Handlers</div><div class="line">app.Server.ReadTimeout = time.Duration(BConfig.Listen.ServerTimeOut) * time.Second</div><div class="line">app.Server.WriteTimeout = time.Duration(BConfig.Listen.ServerTimeOut) * time.Second</div><div class="line">app.Server.ErrorLog = logs.GetLogger(&quot;HTTP&quot;)</div><div class="line">...</div><div class="line">if BConfig.Listen.EnableHTTP &#123;</div><div class="line">	go func() &#123;</div><div class="line">		app.Server.Addr = addr</div><div class="line">		logs.Info(&quot;http server Running on http://%s&quot;, app.Server.Addr)</div><div class="line">		if BConfig.Listen.ListenTCP4 &#123;</div><div class="line">			...</div><div class="line">		&#125; else &#123;</div><div class="line">			if err := app.Server.ListenAndServe(); err != nil &#123;</div><div class="line">				logs.Critical(&quot;ListenAndServe: &quot;, err)</div><div class="line">				time.Sleep(100 * time.Microsecond)</div><div class="line">				endRunning &lt;- true</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;()</div><div class="line">&#125;</div><div class="line">...</div></pre></td></tr></table></figure>
+<p>这里是只是run方法的一部分代码，刚刚我们说到了ControllerRegister实现了接口Handler，这里把app.Hanlders赋值给了app.Server.Handler，这样，http.Server将会调用ControllerRegister相关方法进行路由转发，具体如何调用，在来看这个app.Server.ListenAndServe()方法，这个方法会监听tcp地址，调用服务处理连接请求，一下是代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">func (srv *Server) ListenAndServe() error &#123;</div><div class="line">	addr := srv.Addr</div><div class="line">	if addr == &quot;&quot; &#123;</div><div class="line">		addr = &quot;:http&quot;</div><div class="line">	&#125;</div><div class="line">	// 创建一个监听器*net.TCPListener，监听TCP端口</div><div class="line">	ln, err := net.Listen(&quot;tcp&quot;, addr)</div><div class="line">	if err != nil &#123;</div><div class="line">		return err</div><div class="line">	&#125;</div><div class="line">	// 根据监听器处理请求</div><div class="line">	return srv.Serve(tcpKeepAliveListener&#123;ln.(*net.TCPListener)&#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">func (srv *Server) Serve(l net.Listener) error &#123;</div><div class="line">	defer l.Close()</div><div class="line">	...</div><div class="line"></div><div class="line">	// TODO: allow changing base context? can&apos;t imagine concrete</div><div class="line">	// use cases yet.</div><div class="line">	baseCtx := context.Background()</div><div class="line">	ctx := context.WithValue(baseCtx, ServerContextKey, srv)</div><div class="line">	ctx = context.WithValue(ctx, LocalAddrContextKey, l.Addr())</div><div class="line">	for &#123;</div><div class="line">		// 监听请求，</div><div class="line">		rw, e := l.Accept()</div><div class="line">		if e != nil &#123;</div><div class="line">			if ne, ok := e.(net.Error); ok &amp;&amp; ne.Temporary() &#123;</div><div class="line">				...</div><div class="line">				continue</div><div class="line">			&#125;</div><div class="line">			return e</div><div class="line">		&#125;</div><div class="line">		tempDelay = 0</div><div class="line">		// 创建一个连接</div><div class="line">		c := srv.newConn(rw)</div><div class="line">		c.setState(c.rwc, StateNew) // before Serve can return</div><div class="line">		// 开启一个goroutines处理这个请求</div><div class="line">		go c.serve(ctx)</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">func (c *conn) serve(ctx context.Context) &#123;</div><div class="line">	...</div><div class="line">	for &#123;</div><div class="line">		// 这个过程会根据Context生成http.Response对象</div><div class="line">		w, err := c.readRequest(ctx)</div><div class="line">		if c.r.remain != c.server.initialReadLimitSize() &#123;</div><div class="line">			// If we read any bytes off the wire, we&apos;re active.</div><div class="line">			c.setState(c.rwc, StateActive)</div><div class="line">		&#125;</div><div class="line">		</div><div class="line">		...</div><div class="line"></div><div class="line">		// c.server就是BeeApp.Server</div><div class="line">		// BeeApp.Server上绑定了Beego自定义的路由操作</div><div class="line">		// 即BeeApp.Server.Handler = ControllerRegister</div><div class="line">		serverHandler&#123;c.server&#125;.ServeHTTP(w, w.req)</div><div class="line">		...</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">func (sh serverHandler) ServeHTTP(rw ResponseWriter, req *Request) &#123;</div><div class="line">	// 这里handler就是Beego中的ControllerRegister类型</div><div class="line">	handler := sh.srv.Handler</div><div class="line">	if handler == nil &#123;</div><div class="line">		// 默认是DefaultServeMux</div><div class="line">		handler = DefaultServeMux</div><div class="line">	&#125;</div><div class="line">	if req.RequestURI == &quot;*&quot; &amp;&amp; req.Method == &quot;OPTIONS&quot; &#123;</div><div class="line">		handler = globalOptionsHandler&#123;&#125;</div><div class="line">	&#125;</div><div class="line">	// 调用ServeHTTP处理，并传入http.ResponseWriter，http.Request两个参数</div><div class="line">	handler.ServeHTTP(rw, req)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>在啰嗦几句，这个流程中所有的http.Server{}对象都是beego.BeeApp.Server，只不过经过go的几经周折，在func (c *conn) serve(ctx context.Context){}方法中的serverHandler{c.server}.ServeHTTP(w, w.req)这条语句传递给serverHandle{}结构体，又在func (sh serverHandler) ServeHTTP(rw, req){}方法中，handler := sh.srv.Handler这条语句就获得了beego.ControllerRegister实例，最终调用了beego.ControllerRegister.ServeHTTP(rw, req)来处理路由，最终转发到相应的控制器中，继而视图展示或者返回数据。</p>
+</blockquote>
+
+      
+    </div>
+
+    
+      <footer class="post-footer">
+        <div class="post-tags">
+          
+            <a href="/tags/go-beego/">go,beego</a>
+          
+        </div>
+
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2016/12/21/beego启动流程-context-Context/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">beego启动流程-context.Context</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2016/12/21/Yii2启动流程/">
+        <span class="next-text nav-default">Yii2启动流程</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+        </div>  
+      </main>
+
+      <footer id="footer" class="footer">
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:ofttryaj@163.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.facebook.com/ofttryaj" class="iconfont icon-facebook" title="facebook"></a>
+        
+      
+    
+      
+        
+          <a href="https://github.com/ofttryaj" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+    
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+    
+    2016
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">ofttryaj</span>
+  </span>
+</div>
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+
+
+    
+
+
+  <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.0.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.0.0"></script>
+
+  </body>
+</html>
