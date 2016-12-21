@@ -57,14 +57,14 @@
         
         <li class="menu-item">
           <a class="menu-item-link" href="/">
-            Home
+            首页
           </a>
         </li>
       
         
         <li class="menu-item">
           <a class="menu-item-link" href="/archives/">
-            Archives
+            归档
           </a>
         </li>
       
@@ -89,12 +89,12 @@
     
       
       <a class="mobile-menu-item" href="/">
-        Home
+        首页
       </a>
     
       
       <a class="mobile-menu-item" href="/archives/">
-        Archives
+        归档
       </a>
     
   </nav>
@@ -123,7 +123,7 @@
 
     
       <div class="post-toc" id="post-toc">
-        <h2 class="post-toc-title">Contents</h2>
+        <h2 class="post-toc-title">文章目录</h2>
         <div class="post-toc-content">
           <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Beego-Session"><span class="toc-text">Beego Session</span></a></li></ol>
         </div>
@@ -134,18 +134,19 @@
       
         <h3 id="Beego-Session"><a href="#Beego-Session" class="headerlink" title="Beego Session"></a>Beego Session</h3><p>我们知道，beego在跑起来之前，调用了<strong>initBeforeHTTPRun()</strong>这个函数。beego定义了一个全局不可导出的变量<strong>hooks</strong>，这是一个切片，每个元素的类型是func() error，那么前面那个函数就往<strong>hooks</strong>切片中追加元素，追加完成之后，会遍历<strong>hooks</strong>切片，由于切片每一个元素都是函数类型，因此可以直接调用，<strong>hooks</strong>切片中有这些元素：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">func registerMime() error</div><div class="line">func registerDefaultErrorHandler() error</div><div class="line">func registerSession() error</div><div class="line">func registerTemplate() error</div><div class="line">func registerAdmin() error</div><div class="line">func registerGzip() error</div></pre></td></tr></table></figure>
+<a id="more"></a>
 <p>以上都是在beego包下的hooks.go定义的函数，类型均为func() error，我们先来了解下beego的session包下的session.go，这个文件中定义了一些抽象的需要具体实现的相关结构，定义的相关结构：</p>
 <ul>
 <li><p><strong>provides</strong>的类型为map[string]Provider，这个跟我们之前beego的配置有点像，就是在redis，file，memory,mysql等等还有一些其他的为存储介质的具体实现中，在init函数通过session.Register函数均已注册到<strong>provides</strong>变量中；</p>
 </li>
 <li><p>两个接口分别为Store和Provider，定义了一些行为。我们以session_file.go为例，以file为存储介质的实现，定义了两个结构体FileStore和FileProvider分别实现了Store和Provider接口；</p>
+<ul>
+<li><p>Store接口负责session数据的处理，定义了Set(),Get(),Delete(),SessionID(),SessionRelease(),Flush()操作；</p>
+</li>
+<li><p>Provider接口定义了session本身的管理行为，负责生产Store，定义了SessionInit(),SessionRead(),SessionExist(),SessionRegenerate(),SessionDestroy(),SessionAll(),SessionGC()操作；</p>
 </li>
 </ul>
-<a id="more"></a>
-<pre><code>* Store接口负责session数据的处理，定义了Set(),Get(),Delete(),SessionID(),SessionRelease(),Flush()操作；
-
-* Provider接口定义了session本身的管理行为，负责生产Store，定义了SessionInit(),SessionRead(),SessionExist(),SessionRegenerate(),SessionDestroy(),SessionAll(),SessionGC()操作；
-</code></pre><ul>
+</li>
 <li><p>以上两个接口只定义了抽象行为，这些具体实现都在session包下的session_*.go文件中，不同的存储介质有不同的实现，这样说会很抽象，我们来看看seesion_file.go是如何实现这两个接口，看完之后，我们对Store和Provider接口的理解会更加深入；</p>
 <ul>
 <li><p>session_file.go中定义了FileSessionStore和FileProvider两个结构体，它们分别实现了哪个接口，从名字上我就能知道了。只不过不同的存储介质结构体结构有所不同，具体如下：</p>
@@ -324,16 +325,16 @@
         
   <nav class="post-nav">
     
-      <a class="prev" href="/2016/12/21/Yii2配置文件/">
+      <a class="prev" href="/2016/12/21/beego启动流程-配置/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">Yii2配置详解</span>
-        <span class="prev-text nav-mobile">Prev</span>
+        <span class="prev-text nav-default">beego启动流程-配置</span>
+        <span class="prev-text nav-mobile">上一篇</span>
       </a>
     
     
-      <a class="next" href="/2016/12/21/beego启动流程-配置/">
-        <span class="next-text nav-default">beego启动流程-配置</span>
-        <span class="prev-text nav-mobile">Next</span>
+      <a class="next" href="/2016/12/21/Yii2环境搭建/">
+        <span class="next-text nav-default">Yii2开发环境搭建</span>
+        <span class="prev-text nav-mobile">下一篇</span>
         <i class="iconfont icon-right"></i>
       </a>
     
@@ -389,11 +390,11 @@
 
 <div class="copyright">
   <span class="power-by">
-    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
   </span>
   
   <span class="theme-info">
-    Theme - 
+    主题 - 
     <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
   </span>
 

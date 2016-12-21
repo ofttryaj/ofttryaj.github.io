@@ -57,14 +57,14 @@
         
         <li class="menu-item">
           <a class="menu-item-link" href="/">
-            Home
+            首页
           </a>
         </li>
       
         
         <li class="menu-item">
           <a class="menu-item-link" href="/archives/">
-            Archives
+            归档
           </a>
         </li>
       
@@ -89,12 +89,12 @@
     
       
       <a class="mobile-menu-item" href="/">
-        Home
+        首页
       </a>
     
       
       <a class="mobile-menu-item" href="/archives/">
-        Archives
+        归档
       </a>
     
   </nav>
@@ -123,7 +123,7 @@
 
     
       <div class="post-toc" id="post-toc">
-        <h2 class="post-toc-title">Contents</h2>
+        <h2 class="post-toc-title">文章目录</h2>
         <div class="post-toc-content">
           <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Yii2开发环境搭建"><span class="toc-text">Yii2开发环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Application-structure"><span class="toc-text">Application structure</span></a></li></ol></li></ol></li></ol>
         </div>
@@ -137,9 +137,9 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">这里采用全局安装，具有全局性。</div><div class="line">composer global require &quot;fxp/composer-asset-plugin:~1.1.1&quot;</div></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">composer create-project yiisoft/yii2-app-basic basic 2.0.9</div><div class="line">or</div><div class="line">composer create-project yiisoft/yii2-app-advanced advanced 2.0.9</div></pre></td></tr></table></figure>
 <p>若是下载了官方的包，还需要经过一个步骤,进入到你的项目目录，执行下面的命令，进行安装：</p>
-<a id="more"></a>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">composer install</div></pre></td></tr></table></figure>
 <p>这个过程可能会很漫长，国外的资源，建议翻墙。</p>
+<a id="more"></a>
 <p>接下来还需要做一个操作，初始化yii2项目：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">./init</div><div class="line">Yii Application Initialization Tool v1.0</div><div class="line"></div><div class="line">Which environment do you want the application to be initialized in?</div><div class="line"></div><div class="line">  [0] Development</div><div class="line">  [1] Production</div><div class="line"></div><div class="line">  Your choice [0-1, or &quot;q&quot; to quit]</div></pre></td></tr></table></figure>
 <p>这有两个选项，0表示开发环境，1表示生产环境。我们本地开发的话，则选0，若线上环境则选择1，这里我们选0，选了0之后，会提示你</p>
@@ -167,18 +167,12 @@
         
   <nav class="post-nav">
     
-      <a class="prev" href="/2016/12/21/Yii2启动流程/">
+      <a class="prev" href="/2016/12/21/beego启动流程-SESSION/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">Yii2启动流程</span>
-        <span class="prev-text nav-mobile">Prev</span>
+        <span class="prev-text nav-default">beego启动流程-SESSION</span>
+        <span class="prev-text nav-mobile">上一篇</span>
       </a>
     
-    
-      <a class="next" href="/2016/12/21/Yii2配置文件/">
-        <span class="next-text nav-default">Yii2配置详解</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
     
   </nav>
 
@@ -232,11 +226,11 @@
 
 <div class="copyright">
   <span class="power-by">
-    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
   </span>
   
   <span class="theme-info">
-    Theme - 
+    主题 - 
     <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
   </span>
 
