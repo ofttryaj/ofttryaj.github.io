@@ -124,17 +124,86 @@
     <div class="post-content">
       
         
-          
-        
 
         
           <h3 id="beego-context-Context-context-BeegoInput-context-BeegoOutput"><a href="#beego-context-Context-context-BeegoInput-context-BeegoOutput" class="headerlink" title="beego context.Context, context.BeegoInput, context.BeegoOutput"></a>beego context.Context, context.BeegoInput, context.BeegoOutput</h3><ul>
 <li>context.Context结构体:</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">type Context struct &#123;</div><div class="line">	// 处理请求头，数据，cookie，body，它还包含路由参数和当前的session</div><div class="line">	Input          *BeegoInput</div><div class="line">	// 发送响应头</div><div class="line">	Output         *BeegoOutput</div><div class="line">	Request        *http.Request</div><div class="line">	ResponseWriter *Response</div><div class="line">	_xsrfToken     string</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-          <div class="read-more">
-            <a href="/2016/12/21/beego启动流程-context-Context/" class="read-more-link">Read more..</a>
-          </div>
+<ul>
+<li><p>Request，ResponseWriter字段都是由go内部根据请求创建的request，response对象传过来的，这两个对象提供了一系列跟HTTP请求相关的方法，比如判断请求方式（GET，POST），获取请求头，cookie相关的操作等等，这些方法会体现在BeegoInput，BeegoOupt方法集中；<br>Request字段是go内核中的http.Request类型，但是ResponseWriter字段，则依赖context.Response中匿名字段http.ResponseWriter的具体实现，我通过看go内核源码，可以知道，http.Resposne实现了http.ResponseWirter，并且我们也知道go内部也是创建了http.Response并且通过beego.ControllerRegister.ServeHTTP(w, req)传入的，可以看考我之前写的文章<a href="http://aj.gitgang.com/?p=106" target="_blank" rel="external">beego.ControllerRegister如何注册到go内部的</a>，对request，response的大部分操作，本质上还是go内核中的http.Request，http.Response对象提供的相关方法；</p>
+</li>
+<li><p>Input和Output的类型从上面的结构体可以得知，上面说了很多关于request，response相关的东西，是为了更好的理解Input和Output相关方法集，比如BeegoInput.Header(key string)方法中，就调用了input.Context.Request.Header.Get(key)等等很多这样的方法，都依赖http.Request方法集；BeegoOutput.Header(key, val string)，也调用了output.Context.ResponseWriter.Header().Set(key, val)这个方法，具体可以自己通过源码深入了解；</p>
+</li>
+<li><p>上面的Request,ResponseWriter是如何注入的，下面会说到。我们来了解下Context.Reset(rw http.ResponseWriter, r *http.Request), BeegoInput.Reset(ctx *Context), beegoOutput.Reset(ctx *Context)，这些方法从字面意思来看，是做重置操作的，其实也确实是在做这样的操作，在ServeHTTP(w, req)方法中我们会看到，调用context.Reset(w, req)方法</p>
+<ul>
+<li><p>Context.Reset()，req参数会赋给Request字段，ResponseWriter字段则要复杂点，若ResponseWriter为空，则取&amp;Response{}（这个response是beego的context.Response类型）赋值，之后调用conext.Response.reset(rw http.ResponseWriter)方法，进行重置操作，会把w赋值给Response的ResponseWriter匿名字段，后面两个字段Status = 0，Started = false。接下来调用BeegoInput.Reset()和BeegoOutput.Reset()，_xsrfToken = “”；</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">func (ctx *Context) Reset(rw http.ResponseWriter, r *http.Request) &#123;</div><div class="line">	ctx.Request = r</div><div class="line">	if ctx.ResponseWriter == nil &#123;</div><div class="line">		ctx.ResponseWriter = &amp;Response&#123;&#125;</div><div class="line">	&#125;</div><div class="line">	ctx.ResponseWriter.reset(rw)</div><div class="line">	ctx.Input.Reset(ctx)</div><div class="line">	ctx.Output.Reset(ctx)</div><div class="line">	ctx._xsrfToken = &quot;&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>context.Response同时实现了http.Flusher,http.Hijacker,http.CloseNotifier三个接口。同时还重写了http.Response的Write(),WriteHeader()方法</p>
+</blockquote>
+</li>
+<li><p>BeegoInput.Reset()会把ctx（即当前上下文对象）赋值给Context字段，剩下的就是重置字段；</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">func (input *BeegoInput) Reset(ctx *Context) &#123;</div><div class="line">	input.Context = ctx</div><div class="line">	input.CruSession = nil</div><div class="line">	input.pnames = input.pnames[:0]</div><div class="line">	input.pvalues = input.pvalues[:0]</div><div class="line">	input.data = nil</div><div class="line">	input.RequestBody = []byte&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>BeegoOutput.Reset()第一步也是赋值Context字段，Status = 0；</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">func (output *BeegoOutput) Reset(ctx *Context) &#123;</div><div class="line">	output.Context = ctx</div><div class="line">	output.Status = 0</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>为什么要说这么多，其实后面我们会知道beego.ControllerRegister.ServeHTTP()方法中，当请求过来的时候，go内部会把封装好了的http.Request和http.Response对象传递给这个ServeHTTP()方法中，接下来会从对象池pool中获取一个context对象，会对着这个对象进行重置操作，即context.Reset(rw, r)，我们了解Reset操作后才能更好的理解处理请求后续的操作。</p>
+</blockquote>
+<ul>
+<li><p>我们来看看Context,BeegoInput,BeegoOuput对象提供的一些方法</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">func (ctx *Context) GetCookie(key string) string &#123;</div><div class="line">	return ctx.Input.Cookie(key)</div><div class="line">&#125;</div><div class="line"></div><div class="line">func (ctx *Context) SetCookie(name string, value string, others ...interface&#123;&#125;) &#123;</div><div class="line">	ctx.Output.Cookie(name, value, others...)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>以上两个方法，大家都知道是获取cookie，设置cookie信息的功能，我们知道设置cookie信息是服务器告诉浏览器，你帮我把这些信息保存在你这，等下次浏览器请求服务器的时候，浏览器会把这些信息放在请求体中发送给服务器。我们上面也知道了BeegoInput和BeegoOutput相关含义，因此，SetCookie会调用BeegoOuput.Cookie()方法，而GetCookie()则是调用BeegoInput()方法，那么我们就来看下具体实现。</p>
+</blockquote>
+</li>
+<li><p>BeegoOuput.Cookie()</p>
+<ul>
+<li>这个方法的签名：func (output *BeegoOutput) Cookie(name string, value string, others …interface{})</li>
+<li><p>先来解释下这个方法需要的参数，<strong>name string, value string, others …interface{}</strong>，前两个参数一看就知道是cookie名称和值了，这个others则是<strong>max age time, path,domain, secure and httponly</strong>，并且是严格按照这个顺序来的；当我这样尝试着调用Cookie()方法时，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Cookie(&quot;cookieName&quot;, &quot;CookeValue&quot;, 145, &quot;/&quot;, &quot;http://aj.gitgang.com&quot;, true, true)</div><div class="line">// 往Set-Cookie头信息写入的内容是</div><div class="line">// cookieName=CookeValue; Expires=Fri, 16 Dec 2016 08:29:19 UTC; Max-Age=145; Path=/; Domain=http://aj.gitgang.com; Secure; HttpOnly</div></pre></td></tr></table></figure>
+</li>
+<li><p>beego在output.go文件中封装了两个替换器<strong>strings.NewReplacer(“\n”, “-“, “\r”, “-“)</strong>和<strong>strings.NewReplacer(“\n”, “ “, “\r”, “ “, “;”, “ “)</strong>，第一个替换器就是把\n，\r转换为-，第二个则是把\n，\r，;替换为空格</p>
+</li>
+<li><p>方法首先声明了一个var b bytes.Buffer，所有的内容都放在这个变量里；</p>
+</li>
+<li><p>先对name和value分别用上面两个替换器进行替换，接下来会按照这样的格式<strong>“%s=%s”</strong>写入变量b中；</p>
+</li>
+<li><p>接下来会判断others变量中的参数个数进行判断，上面我们说到了others这个参数，这个参数是不定长的，但是我们传入参数的含义，是按顺序定义好了的，按顺序解释如下：</p>
+<ol>
+<li>max age time：cookie过期时间，这里可能不恰当，但是beego确实利用这个值对cookie设置了过期时间，beego解释说为了解决cookie在IE下的问题；</li>
+<li>path：cookie路径，那些cookie在服务器上的该路径下能够被访问，如果设置”/“，那么这个cookie能在整个网站根目录下被访问，若设置/foo/，那么只能是/foo/及其子目录下能够访问该cookie；</li>
+<li>domain：cookie域，指定cookie发送至哪些域</li>
+<li>secure：用来表示cookie是不是仅仅只能通过安全的HTTPS连接进行传输；</li>
+<li>httponly：当设置为true，cookie只能通过http协议访问，不能被脚本语言访问，例如javascript</li>
+</ol>
+<p>如果传入了一个参数并且符合条件，则往变量b中写入类似这样的<strong>; Expires=Fri, 16 Dec 2016 08:29:19 UTC; Max-Age=145</strong>内容，否则写入<strong>; Max-Age=0</strong></p>
+<p>如果传入了第二个参数并符合条件，则写入<strong>; Path=/foo/</strong>，否则<strong>; Path=/</strong></p>
+<p>如果传入第三个参数并符合条件，则写入<strong>; Domain=<a href="http://aj.gitgang.com" target="_blank" rel="external">http://aj.gitgang.com</a></strong>，否则忽略</p>
+<p>如果传入第四个参数并符合条件，则写入<strong>; Secure</strong>，否则忽略</p>
+<p>如果传入第五个参数并符合条件，则写入<strong>; ; HttpOnly</strong>，否则忽略</p>
+<p>如果参数全部传入的话，则会构造这样的一个字符串<strong>cookieName=CookeValue; Expires=Fri, 16 Dec 2016 08:29:19 UTC; Max-Age=145; Path=/; Domain=<a href="http://aj.gitgang.com" target="_blank" rel="external">http://aj.gitgang.com</a>; Secure; HttpOnly</strong></p>
+</li>
+<li><p>最后调用output.Context.ResponseWriter.Header().Add(“Set-Cookie”, b.String())，放到响应头；</p>
+</li>
+</ul>
+</li>
+<li><p>BeegoInput.Cookie()</p>
+<ul>
+<li>这个方法的签名：func (input *BeegoInput) Cookie(key string) string </li>
+<li>方法直接调用input.Context.Request.Cookie(key)来从请求体中获取cookie的值，若出错则返回空字符串；</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>这里只是列举了操作cookie的方法，还有像获取头部信息，请求参数，Session，响应的数据格式json，xml等等很多方法，就不一一列举了，大家可以自己去了解相关的东西</p>
+</blockquote>
+
         
       
     </div>
