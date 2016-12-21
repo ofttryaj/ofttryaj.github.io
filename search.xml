@@ -1,28 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <title>big gang silk</title>
+<search>
   
-  <link href="/atom.xml" rel="self"/>
   
-  <link href="https://ofttryaj.github.io/"/>
-  <updated>2016-12-21T07:48:00.000Z</updated>
-  <id>https://ofttryaj.github.io/</id>
-  
-  <author>
-    <name>ofttryaj</name>
     
-  </author>
-  
-  <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>Yii2启动流程</title>
-    <link href="https://ofttryaj.github.io/2016/12/21/Yii2%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/"/>
-    <id>https://ofttryaj.github.io/2016/12/21/Yii2启动流程/</id>
-    <published>2016-12-21T07:40:16.000Z</published>
-    <updated>2016-12-21T07:48:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Yii2启动流程"><a href="#Yii2启动流程" class="headerlink" title="Yii2启动流程"></a>Yii2启动流程</h1><p>通过上次的Yii2开发环境搭建的目录结构介绍，暴露给外界web目录，该目录下有一个index.php入口文件，那么所有的请求都是从这个入口文件开始的。具体来看看入口文件的代码。</p>
+    <entry>
+      <title><![CDATA[Yii2启动流程]]></title>
+      <url>https://ofttryaj.github.io/2016/12/21/Yii2%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/</url>
+      <content type="html"><![CDATA[<h1 id="Yii2启动流程"><a href="#Yii2启动流程" class="headerlink" title="Yii2启动流程"></a>Yii2启动流程</h1><p>通过上次的Yii2开发环境搭建的目录结构介绍，暴露给外界web目录，该目录下有一个index.php入口文件，那么所有的请求都是从这个入口文件开始的。具体来看看入口文件的代码。</p>
 <blockquote>
 <p><strong>这里我们只说到Application的实例化过程，具体run这一过程会专门说的。</strong></p>
 </blockquote>
@@ -56,30 +40,12 @@
 <p>至此，一个可运行的Application实例以及一些额外的扩展已经完全就绪了。这里还有处理错误机制没有仔细说，这个就是调用PHP函数注册yii2自定义的错误处理机制，这些就很简单了，这里篇幅有限就不再啰嗦了。</p>
 </blockquote>
 ]]></content>
+    </entry>
     
-    <summary type="html">
-    
-      &lt;h1 id=&quot;Yii2启动流程&quot;&gt;&lt;a href=&quot;#Yii2启动流程&quot; class=&quot;headerlink&quot; title=&quot;Yii2启动流程&quot;&gt;&lt;/a&gt;Yii2启动流程&lt;/h1&gt;&lt;p&gt;通过上次的Yii2开发环境搭建的目录结构介绍，暴露给外界web目录，该目录下有一个index.php入口文件，那么所有的请求都是从这个入口文件开始的。具体来看看入口文件的代码。&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;这里我们只说到Application的实例化过程，具体run这一过程会专门说的。&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;15&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;16&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;17&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;18&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;19&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;20&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;21&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;22&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;23&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;24&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;25&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;26&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;27&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;28&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;29&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;30&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;31&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;// 我们在对项目进行init的时候，选择的是开发环境，因此debug为ture，env为dev&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;defined(&amp;apos;YII_DEBUG&amp;apos;) or define(&amp;apos;YII_DEBUG&amp;apos;, true);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;defined(&amp;apos;YII_ENV&amp;apos;) or define(&amp;apos;YII_ENV&amp;apos;, &amp;apos;dev&amp;apos;);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// 引入composer的自动加载文件&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;require(__DIR__ . &amp;apos;/../../vendor/autoload.php&amp;apos;);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// 引入了Yii2的启动文件，这个文件做了以下几件事情&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// 1. 注册了Yii2自动加载机制，并优先使用Yii2自动加载机制&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// 2. 引入了classes.php文件，限定名称 =&amp;gt; 类的物理路径之间的映射关系&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// 3. Yii::$container，实例化这个依赖注入容器，在一次请求过程中，这个属性是全局唯一的，这个依赖注入容器以后会详细说明&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;require(__DIR__ . &amp;apos;/../../vendor/yiisoft/yii2/Yii.php&amp;apos;);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// 这个文件会向Yii::$aliases追加@common,@frontend,@backend,@console&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// 与之相对应的物理路径，当然我们也可以根据需要添加相应的映射&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;require(__DIR__ . &amp;apos;/../../common/config/bootstrap.php&amp;apos;);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// 与上面的文件功能一致，这个是各自应用独有的，上面是每个应用公用的&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;require(__DIR__ . &amp;apos;/../config/bootstrap.php&amp;apos;);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// 整理出yii\web\Application类所需要的格式的配置&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// 从这几个合并的顺序可以看出，应用下的配置会覆盖公共配置&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// -local.php会覆盖.php配置&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;$config = yii\helpers\ArrayHelper::merge(&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    require(__DIR__ . &amp;apos;/../../common/config/main.php&amp;apos;),&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    require(__DIR__ . &amp;apos;/../../common/config/main-local.php&amp;apos;),&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    require(__DIR__ . &amp;apos;/../config/main.php&amp;apos;),&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    require(__DIR__ . &amp;apos;/../config/main-local.php&amp;apos;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// 实例化web application实例&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;$application = new yii\web\Application($config);&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// 运行，就是这么优美地运行起来了&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;$application-&amp;gt;run();&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-    
-    </summary>
-    
-    
-      <category term="PHP,Yii2" scheme="https://ofttryaj.github.io/tags/PHP-Yii2/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Yii2开发环境搭建</title>
-    <link href="https://ofttryaj.github.io/2016/12/21/Yii2%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
-    <id>https://ofttryaj.github.io/2016/12/21/Yii2环境搭建/</id>
-    <published>2016-12-21T07:40:16.000Z</published>
-    <updated>2016-12-21T07:46:53.000Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Yii2开发环境搭建"><a href="#Yii2开发环境搭建" class="headerlink" title="Yii2开发环境搭建"></a>Yii2开发环境搭建</h1><p>官方提供的目录架构<a href="https://github.com/yiisoft/yii2-app-advanced" target="_blank" rel="external">yii2-app-advance</a>|<a href="https://github.com/yiisoft/yii2-app-basic" target="_blank" rel="external">yii2-app-basice</a>下载release包。</p>
+    <entry>
+      <title><![CDATA[Yii2开发环境搭建]]></title>
+      <url>https://ofttryaj.github.io/2016/12/21/Yii2%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
+      <content type="html"><![CDATA[<h1 id="Yii2开发环境搭建"><a href="#Yii2开发环境搭建" class="headerlink" title="Yii2开发环境搭建"></a>Yii2开发环境搭建</h1><p>官方提供的目录架构<a href="https://github.com/yiisoft/yii2-app-advanced" target="_blank" rel="external">yii2-app-advance</a>|<a href="https://github.com/yiisoft/yii2-app-basic" target="_blank" rel="external">yii2-app-basice</a>下载release包。</p>
 <p>或者可以利用<a href="http://www.phpcomposer.com/" target="_blank" rel="external">composer</a>管理工具来创建项目，yii2依赖composer-asset-plugin插件，因此必须先安装这个插件：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">这里采用全局安装，具有全局性。</div><div class="line">composer global require &quot;fxp/composer-asset-plugin:~1.1.1&quot;</div></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">composer create-project yiisoft/yii2-app-basic basic 2.0.9</div><div class="line">or</div><div class="line">composer create-project yiisoft/yii2-app-advanced advanced 2.0.9</div></pre></td></tr></table></figure>
@@ -100,30 +66,12 @@
 <p>console目录结构：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">config      ------------ console应用独立配置项</div><div class="line">controllers ------------ 控制器</div><div class="line">migrations  ------------ 数据库迁移文件</div><div class="line">models      ------------ model层</div><div class="line">runtime     ------------ 运行时缓存文件</div></pre></td></tr></table></figure>
 ]]></content>
+    </entry>
     
-    <summary type="html">
-    
-      &lt;h1 id=&quot;Yii2开发环境搭建&quot;&gt;&lt;a href=&quot;#Yii2开发环境搭建&quot; class=&quot;headerlink&quot; title=&quot;Yii2开发环境搭建&quot;&gt;&lt;/a&gt;Yii2开发环境搭建&lt;/h1&gt;&lt;p&gt;官方提供的目录架构&lt;a href=&quot;https://github.com/yiisoft/yii2-app-advanced&quot;&gt;yii2-app-advance&lt;/a&gt;|&lt;a href=&quot;https://github.com/yiisoft/yii2-app-basic&quot;&gt;yii2-app-basice&lt;/a&gt;下载release包。&lt;/p&gt;
-&lt;p&gt;或者可以利用&lt;a href=&quot;http://www.phpcomposer.com/&quot;&gt;composer&lt;/a&gt;管理工具来创建项目，yii2依赖composer-asset-plugin插件，因此必须先安装这个插件：&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;这里采用全局安装，具有全局性。&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;composer global require &amp;quot;fxp/composer-asset-plugin:~1.1.1&amp;quot;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;composer create-project yiisoft/yii2-app-basic basic 2.0.9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;or&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;composer create-project yiisoft/yii2-app-advanced advanced 2.0.9&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;若是下载了官方的包，还需要经过一个步骤,进入到你的项目目录，执行下面的命令，进行安装：&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="PHP,Yii2" scheme="https://ofttryaj.github.io/tags/PHP-Yii2/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Yii2配置详解</title>
-    <link href="https://ofttryaj.github.io/2016/12/21/Yii2%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/"/>
-    <id>https://ofttryaj.github.io/2016/12/21/Yii2配置文件/</id>
-    <published>2016-12-21T07:40:16.000Z</published>
-    <updated>2016-12-21T07:47:42.000Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Yii2配置详解"><a href="#Yii2配置详解" class="headerlink" title="Yii2配置详解"></a>Yii2配置详解</h1><p>yii2的配置文件除了公共(common文件夹下的配置)，每个应用目录下都有自己的配置文件，这些配置均包含以下几个文件：(我们这里用的是Yii2官方的高级模板)</p>
+    <entry>
+      <title><![CDATA[Yii2配置详解]]></title>
+      <url>https://ofttryaj.github.io/2016/12/21/Yii2%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/</url>
+      <content type="html"><![CDATA[<h1 id="Yii2配置详解"><a href="#Yii2配置详解" class="headerlink" title="Yii2配置详解"></a>Yii2配置详解</h1><p>yii2的配置文件除了公共(common文件夹下的配置)，每个应用目录下都有自己的配置文件，这些配置均包含以下几个文件：(我们这里用的是Yii2官方的高级模板)</p>
 <blockquote>
 <p><strong>后面还会说到Yii::createObject()方法，因为跟配置有点联系，所以就放在这里</strong></p>
 </blockquote>
@@ -153,36 +101,12 @@
 <p>yii2框架的配置文件格式跟第二种调用方式的数据结构一致这样我们就知道了配置components为什么要这样配置了，我们说明下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">	&apos;class&apos; =&gt; &apos;类名&apos;,</div><div class="line">	&apos;property1&apos; =&gt; &apos;属性值1&apos;,</div><div class="line">	&apos;property2&apos; =&gt; &apos;属性值2&apos;,</div><div class="line">	...</div><div class="line">]</div></pre></td></tr></table></figure>
 ]]></content>
+    </entry>
     
-    <summary type="html">
-    
-      &lt;h1 id=&quot;Yii2配置详解&quot;&gt;&lt;a href=&quot;#Yii2配置详解&quot; class=&quot;headerlink&quot; title=&quot;Yii2配置详解&quot;&gt;&lt;/a&gt;Yii2配置详解&lt;/h1&gt;&lt;p&gt;yii2的配置文件除了公共(common文件夹下的配置)，每个应用目录下都有自己的配置文件，这些配置均包含以下几个文件：(我们这里用的是Yii2官方的高级模板)&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;后面还会说到Yii::createObject()方法，因为跟配置有点联系，所以就放在这里&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;main-local.php           ---------- 本地的配置，本地开发需要自己特定的配置，可以覆盖main.php中的配置项&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;main.php                 ---------- 正式环境的配置项&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;params-local.php         ---------- 本地的参数配置&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;params.php               ---------- 正式环境的参数配置&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;bootstrap.php            ---------- 设置 aliasName =&amp;gt; 物理路径 映射，比如：@common =&amp;gt; &amp;apos;/Users/llrve/workspaces/php/yii/common&amp;apos;，这里只是为了说明这个文件的作用，物理路径不会这样写死。&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;通常*-local.php这类文件都不会加入版本控制，一般都是自己本地开发个性化的配置，比如数据连接配置项，每个人的数据库用户名，密码可能不相同，这里就可以在-local.php文件中配置自己的数据库配置选项。这些文件的优先顺序，可以从入口文件得知：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;应用的main-local.php会覆盖应用的main.php&lt;/li&gt;
-&lt;li&gt;应用的main.php会覆盖公共的main-local.php&lt;/li&gt;
-&lt;li&gt;公共的main-local.php会覆盖公共的main.php&lt;/li&gt;
-&lt;/ol&gt;
-    
-    </summary>
-    
-    
-      <category term="PHP,Yii2" scheme="https://ofttryaj.github.io/tags/PHP-Yii2/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>beego启动流程-SESSION</title>
-    <link href="https://ofttryaj.github.io/2016/12/21/beego%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B-SESSION/"/>
-    <id>https://ofttryaj.github.io/2016/12/21/beego启动流程-SESSION/</id>
-    <published>2016-12-21T07:40:16.000Z</published>
-    <updated>2016-12-21T07:49:38.000Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="Beego-Session"><a href="#Beego-Session" class="headerlink" title="Beego Session"></a>Beego Session</h3><p>我们知道，beego在跑起来之前，调用了<strong>initBeforeHTTPRun()</strong>这个函数。beego定义了一个全局不可导出的变量<strong>hooks</strong>，这是一个切片，每个元素的类型是func() error，那么前面那个函数就往<strong>hooks</strong>切片中追加元素，追加完成之后，会遍历<strong>hooks</strong>切片，由于切片每一个元素都是函数类型，因此可以直接调用，<strong>hooks</strong>切片中有这些元素：</p>
+    <entry>
+      <title><![CDATA[beego启动流程-SESSION]]></title>
+      <url>https://ofttryaj.github.io/2016/12/21/beego%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B-SESSION/</url>
+      <content type="html"><![CDATA[<h3 id="Beego-Session"><a href="#Beego-Session" class="headerlink" title="Beego Session"></a>Beego Session</h3><p>我们知道，beego在跑起来之前，调用了<strong>initBeforeHTTPRun()</strong>这个函数。beego定义了一个全局不可导出的变量<strong>hooks</strong>，这是一个切片，每个元素的类型是func() error，那么前面那个函数就往<strong>hooks</strong>切片中追加元素，追加完成之后，会遍历<strong>hooks</strong>切片，由于切片每一个元素都是函数类型，因此可以直接调用，<strong>hooks</strong>切片中有这些元素：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">func registerMime() error</div><div class="line">func registerDefaultErrorHandler() error</div><div class="line">func registerSession() error</div><div class="line">func registerTemplate() error</div><div class="line">func registerAdmin() error</div><div class="line">func registerGzip() error</div></pre></td></tr></table></figure>
 <p>以上都是在beego包下的hooks.go定义的函数，类型均为func() error，我们先来了解下beego的session包下的session.go，这个文件中定义了一些抽象的需要具体实现的相关结构，定义的相关结构：</p>
 <ul>
@@ -360,34 +284,12 @@
 <p>这里就全部说完了，注意我们这里仅仅是以session_file.go为例，使得我们的内容更具体化，当然你也可以结合session_mem.go来理解，但是都不会脱离Store和Provider这两个接口的，只是具体实现的方式有所不同，定义的*Store和*Provider结构体不一样罢了。</p>
 </blockquote>
 ]]></content>
+    </entry>
     
-    <summary type="html">
-    
-      &lt;h3 id=&quot;Beego-Session&quot;&gt;&lt;a href=&quot;#Beego-Session&quot; class=&quot;headerlink&quot; title=&quot;Beego Session&quot;&gt;&lt;/a&gt;Beego Session&lt;/h3&gt;&lt;p&gt;我们知道，beego在跑起来之前，调用了&lt;strong&gt;initBeforeHTTPRun()&lt;/strong&gt;这个函数。beego定义了一个全局不可导出的变量&lt;strong&gt;hooks&lt;/strong&gt;，这是一个切片，每个元素的类型是func() error，那么前面那个函数就往&lt;strong&gt;hooks&lt;/strong&gt;切片中追加元素，追加完成之后，会遍历&lt;strong&gt;hooks&lt;/strong&gt;切片，由于切片每一个元素都是函数类型，因此可以直接调用，&lt;strong&gt;hooks&lt;/strong&gt;切片中有这些元素：&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;func registerMime() error&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;func registerDefaultErrorHandler() error&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;func registerSession() error&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;func registerTemplate() error&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;func registerAdmin() error&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;func registerGzip() error&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;以上都是在beego包下的hooks.go定义的函数，类型均为func() error，我们先来了解下beego的session包下的session.go，这个文件中定义了一些抽象的需要具体实现的相关结构，定义的相关结构：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;provides&lt;/strong&gt;的类型为map[string]Provider，这个跟我们之前beego的配置有点像，就是在redis，file，memory,mysql等等还有一些其他的为存储介质的具体实现中，在init函数通过session.Register函数均已注册到&lt;strong&gt;provides&lt;/strong&gt;变量中；&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;两个接口分别为Store和Provider，定义了一些行为。我们以session_file.go为例，以file为存储介质的实现，定义了两个结构体FileStore和FileProvider分别实现了Store和Provider接口；&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-    
-    </summary>
-    
-    
-      <category term="Go,Beego" scheme="https://ofttryaj.github.io/tags/Go-Beego/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>beego启动流程-配置</title>
-    <link href="https://ofttryaj.github.io/2016/12/21/beego%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B-%E9%85%8D%E7%BD%AE/"/>
-    <id>https://ofttryaj.github.io/2016/12/21/beego启动流程-配置/</id>
-    <published>2016-12-21T07:40:16.000Z</published>
-    <updated>2016-12-21T07:49:22.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>在beego包下有一个config.go文件，这个文件定义了beego的配置相关的结构体，有以下一些结构体：</p>
+    <entry>
+      <title><![CDATA[beego启动流程-配置]]></title>
+      <url>https://ofttryaj.github.io/2016/12/21/beego%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B-%E9%85%8D%E7%BD%AE/</url>
+      <content type="html"><![CDATA[<p>在beego包下有一个config.go文件，这个文件定义了beego的配置相关的结构体，有以下一些结构体：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">// 这是主配置结构，包含字段和Listen，WebConfig，LogConfig一些结构</div><div class="line">type Config struct &#123;</div><div class="line">	...</div><div class="line">	Listen              Listen</div><div class="line">	WebConfig           WebConfig</div><div class="line">	Log                 LogConfig</div><div class="line">&#125;</div><div class="line">// 与http和https相关的配置</div><div class="line">type Listen struct &#123;</div><div class="line">	...</div><div class="line">&#125;</div><div class="line">// web相关的配置，包含一个SessionConfig结构</div><div class="line">type WebConfig struct &#123;</div><div class="line">	...</div><div class="line">	Session                SessionConfig</div><div class="line">&#125;</div><div class="line">// seesion相关的配置</div><div class="line">type SessionConfig struct &#123;</div><div class="line">	...</div><div class="line">&#125;</div><div class="line">// 日志相关的配置</div><div class="line">type LogConfig struct &#123;</div><div class="line">	...</div><div class="line">&#125;</div><div class="line">// 这个结构体用于解析配置文件，目前beego只用到了ini provider，等下可以从下面的变量知道这一点</div><div class="line">type beegoAppConfig struct &#123;</div><div class="line">	// 这个接口定义了一些方法集，这些方法用于从配置文件中获取和设置值</div><div class="line">	// 比如beego的config包下面实现了这个接口的有xml，yaml，ini，json等</div><div class="line">	innerConfig config.Configer</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>接下来定义了4个可导出的全局变量和两个不可导出的全局变量，如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">var (</div><div class="line">	// 应用的主体配置，即我们用bee工具新建的或者手动创建的应用</div><div class="line">	BConfig *Config</div><div class="line">	// beegoAppConfig依赖innerConfig字段来从配置文件中获取和设置值，即实现了config.Conffiger接口的对象</div><div class="line">	// 从下面的newAppConfig()函数中可以了解到，innerConfig就是config.IniConfig&#123;&#125;的实例</div><div class="line">	// 具体如何实现，可以去了解config.IniConfig具体方法的实现</div><div class="line">	AppConfig *beegoAppConfig</div><div class="line">	// 应用的绝对路径</div><div class="line">	AppPath string</div><div class="line">	// session.Manager的实例</div><div class="line">	GlobalSessions *session.Manager</div><div class="line">	// 应用配置文件的路径</div><div class="line">	appConfigPath string</div><div class="line">	// 这个变量是没有办法从外部更改的，除非强行改这里的代码，默认是ini provider</div><div class="line">	appConfigProvider = &quot;ini&quot;</div><div class="line">)</div></pre></td></tr></table></figure>
@@ -440,19 +342,8 @@ wego
 <p>这样beego配置相关的都完成了，包括一些全局变量的赋值操作，配置的初始化以及将应用的配置信息覆盖或追加到相应的字段中，接下来就可以读取配置信息，进行相关的操作了。</p>
 </blockquote>
 ]]></content>
+    </entry>
     
-    <summary type="html">
-    
-      &lt;p&gt;在beego包下有一个config.go文件，这个文件定义了beego的配置相关的结构体，有以下一些结构体：&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;15&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;16&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;17&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;18&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;19&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;20&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;21&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;22&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;23&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;24&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;25&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;26&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;27&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;28&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;29&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;30&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;// 这是主配置结构，包含字段和Listen，WebConfig，LogConfig一些结构&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;type Config struct &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	...&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	Listen              Listen&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	WebConfig           WebConfig&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	Log                 LogConfig&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// 与http和https相关的配置&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;type Listen struct &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	...&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// web相关的配置，包含一个SessionConfig结构&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;type WebConfig struct &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	...&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	Session                SessionConfig&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// seesion相关的配置&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;type SessionConfig struct &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	...&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// 日志相关的配置&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;type LogConfig struct &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	...&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;// 这个结构体用于解析配置文件，目前beego只用到了ini provider，等下可以从下面的变量知道这一点&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;type beegoAppConfig struct &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	// 这个接口定义了一些方法集，这些方法用于从配置文件中获取和设置值&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	// 比如beego的config包下面实现了这个接口的有xml，yaml，ini，json等&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	innerConfig config.Configer&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;接下来定义了4个可导出的全局变量和两个不可导出的全局变量，如下：&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;15&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;16&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;var (&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	// 应用的主体配置，即我们用bee工具新建的或者手动创建的应用&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	BConfig *Config&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	// beegoAppConfig依赖innerConfig字段来从配置文件中获取和设置值，即实现了config.Conffiger接口的对象&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	// 从下面的newAppConfig()函数中可以了解到，innerConfig就是config.IniConfig&amp;#123;&amp;#125;的实例&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	// 具体如何实现，可以去了解config.IniConfig具体方法的实现&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	AppConfig *beegoAppConfig&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	// 应用的绝对路径&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	AppPath string&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	// session.Manager的实例&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	GlobalSessions *session.Manager&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	// 应用配置文件的路径&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	appConfigPath string&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	// 这个变量是没有办法从外部更改的，除非强行改这里的代码，默认是ini provider&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	appConfigProvider = &amp;quot;ini&amp;quot;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-    
-    </summary>
-    
-    
-      <category term="go,beego" scheme="https://ofttryaj.github.io/tags/go-beego/"/>
-    
-  </entry>
   
-</feed>
+  
+</search>

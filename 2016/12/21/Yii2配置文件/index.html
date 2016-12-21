@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="Yii2配置详解"/>
+
+
+
+
+  <meta name="keywords" content="PHP,Yii2," />
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="big gang silk">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.0.0" />
+
+
+
+<link rel="canonical" href="https://ofttryaj.github.io/2016/12/21/Yii2配置文件/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.0" />
+
+
+
+  
+
+
+
+    <title> Yii2配置详解 · big gang silk </title>
+  </head>
+
+  <body>
+    <div class="container">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">big gang silk</a>
+</div>
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            Archives
+          </a>
+        </li>
+      
+      
+    </ul>
+  
+</nav>
+
+<div class="mobile-navbar">
+  <div class="mobile-header">
+    <div class="mobile-header-logo">
+      <a href="/." class="logo">big gang silk</a>
+    </div>
+
+    <div class="mobile-header-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+  <nav class="mobile-menu">
+    
+      
+      <a class="mobile-menu-item" href="/">
+        Home
+      </a>
+    
+      
+      <a class="mobile-menu-item" href="/archives/">
+        Archives
+      </a>
+    
+  </nav>
+</div>
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Yii2配置详解
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          Dec 21, 2016
+        </span>
+      </div>
+    </header>
+
+    
+      <div class="post-toc" id="post-toc">
+        <h2 class="post-toc-title">Contents</h2>
+        <div class="post-toc-content">
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Yii2配置详解"><span class="toc-text">Yii2配置详解</span></a></li></ol>
+        </div>
+      </div>
+    
+
+    <div class="post-content">
+      
+        <h1 id="Yii2配置详解"><a href="#Yii2配置详解" class="headerlink" title="Yii2配置详解"></a>Yii2配置详解</h1><p>yii2的配置文件除了公共(common文件夹下的配置)，每个应用目录下都有自己的配置文件，这些配置均包含以下几个文件：(我们这里用的是Yii2官方的高级模板)</p>
+<blockquote>
+<p><strong>后面还会说到Yii::createObject()方法，因为跟配置有点联系，所以就放在这里</strong></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">main-local.php           ---------- 本地的配置，本地开发需要自己特定的配置，可以覆盖main.php中的配置项</div><div class="line">main.php                 ---------- 正式环境的配置项</div><div class="line">params-local.php         ---------- 本地的参数配置</div><div class="line">params.php               ---------- 正式环境的参数配置</div><div class="line">bootstrap.php            ---------- 设置 aliasName =&gt; 物理路径 映射，比如：@common =&gt; &apos;/Users/llrve/workspaces/php/yii/common&apos;，这里只是为了说明这个文件的作用，物理路径不会这样写死。</div></pre></td></tr></table></figure>
+<p>通常*-local.php这类文件都不会加入版本控制，一般都是自己本地开发个性化的配置，比如数据连接配置项，每个人的数据库用户名，密码可能不相同，这里就可以在-local.php文件中配置自己的数据库配置选项。这些文件的优先顺序，可以从入口文件得知：</p>
+<ol>
+<li>应用的main-local.php会覆盖应用的main.php</li>
+<li>应用的main.php会覆盖公共的main-local.php</li>
+<li>公共的main-local.php会覆盖公共的main.php</li>
+</ol>
+<a id="more"></a>
+<p>params配置文件同main文件的合并顺序</p>
+<p>以上所有的配置文件经合并</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$config = yii\helpers\ArrayHelper::merge(</div><div class="line">    require(__DIR__ . &apos;/../../common/config/main.php&apos;),</div><div class="line">    require(__DIR__ . &apos;/../../common/config/main-local.php&apos;),</div><div class="line">    require(__DIR__ . &apos;/../config/main.php&apos;),</div><div class="line">    require(__DIR__ . &apos;/../config/main-local.php&apos;)</div><div class="line">);</div></pre></td></tr></table></figure>
+<p>合并之后的结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">Array</div><div class="line">(</div><div class="line">    [vendorPath] =&gt; /Users/llrve/workspaces/php/yii/vendor</div><div class="line">    [components] =&gt; Array</div><div class="line">        (</div><div class="line">				[db] =&gt; Array</div><div class="line">                (</div><div class="line">                    [class] =&gt; yii\db\Connection</div><div class="line">                    [dsn] =&gt; mysql:host=localhost;dbname=yii2advanced</div><div class="line">                    [username] =&gt; root</div><div class="line">                    [password] =&gt;</div><div class="line">                    [charset] =&gt; utf8</div><div class="line">                )</div><div class="line">              ...这里我只列举了db组件，还有像mailer，log等等或者你自己定义的组件</div><div class="line">        )</div><div class="line"></div><div class="line">    [id] =&gt; app-frontend</div><div class="line">    [basePath] =&gt; /Users/llrve/workspaces/php/yii/frontend</div><div class="line">    [bootstrap] =&gt; Array</div><div class="line">        (</div><div class="line">            [0] =&gt; log</div><div class="line">            [1] =&gt; debug</div><div class="line">            [2] =&gt; gii</div><div class="line">        )</div><div class="line"></div><div class="line">    [controllerNamespace] =&gt; frontend\controllers</div><div class="line">    [params] =&gt; Array</div><div class="line">        (</div><div class="line">        	配置参数，这个用来扩展main配置，可以将一些公用的参数配置在这个文件中</div><div class="line">            [adminEmail] =&gt; admin@example.com</div><div class="line">            [supportEmail] =&gt; support@example.com</div><div class="line">            [user.passwordResetTokenExpire] =&gt; 3600</div><div class="line">        )</div><div class="line"></div><div class="line">    [modules] =&gt; Array</div><div class="line">        (</div><div class="line">        	这里都是yii框架的一个扩展模块，debug，gii都是内置的，我们也可以利用gii创建自己的模块</div><div class="line">            [debug] =&gt; Array</div><div class="line">                (</div><div class="line">                    [class] =&gt; yii\debug\Module</div><div class="line">                )</div><div class="line"></div><div class="line">            [gii] =&gt; Array</div><div class="line">                (</div><div class="line">                    [class] =&gt; yii\gii\Module</div><div class="line">                )</div><div class="line"></div><div class="line">        )</div><div class="line"></div><div class="line">)</div></pre></td></tr></table></figure>
+<p>合成之后的整体结构是这样的。也会有自定义的组件和模块。了解了配置格式之后，我们再来看看yii框架是如何根据这些配置去实例化一个类。yii\BaseYii类中定义了一个createObject()方法：</p>
+<blockquote>
+<p><strong>yii\BaseYii::$container就是yii\di\Container的实例，这里我们主要是了解下yii\BaseYii::createOjbect()方法需要的数据结构，具体Container如何利用反射得到一个对象，有兴趣的可以自己深入了解</strong></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public static function createObject($type, array $params = [])</div><div class="line">&#123;</div><div class="line">    if (is_string($type)) &#123;</div><div class="line">    	// 如果是字符串直接yii\di\Container-&gt;get()方法，此处$params为构造方法需要的参数值</div><div class="line">        return static::$container-&gt;get($type, $params);</div><div class="line">    &#125; elseif (is_array($type) &amp;&amp; isset($type[&apos;class&apos;])) &#123;</div><div class="line">        // 如果是数组，并且有class索引，则获取class的值，并且unset class索引</div><div class="line">        $class = $type[&apos;class&apos;];</div><div class="line">        unset($type[&apos;class&apos;]);</div><div class="line">        // $class为类名，$params为构造方法需要的参数，$type为$class属性</div><div class="line">        return static::$container-&gt;get($class, $params, $type);</div><div class="line">    &#125; elseif (is_callable($type, true)) &#123;</div><div class="line">    	// 如果$type是一个可调用结构，则直接调用invoke</div><div class="line">    	// is_callable(functionName)或者is_callable([object, method])</div><div class="line">        return static::$container-&gt;invoke($type, $params);</div><div class="line">    &#125; elseif (is_array($type)) &#123;</div><div class="line">        throw new InvalidConfigException(&apos;Object configuration must be an array containing a &quot;class&quot; element.&apos;);</div><div class="line">    &#125; else &#123;</div><div class="line">        throw new InvalidConfigException(&apos;Unsupported configuration type: &apos; . gettype($type));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>通过以上，我们知道了给Yii::createObject()方法如何传入参数了，我们可以有以下几种调用形式：</p>
+<blockquote>
+<p><strong>这里是引用了官方的demo</strong></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// create an object using a class name</div><div class="line"> $object = Yii::createObject(&apos;yii\db\Connection&apos;);</div><div class="line"></div><div class="line">// create an object using a configuration array</div><div class="line">$object = Yii::createObject([</div><div class="line">  	&apos;class&apos; =&gt; &apos;yii\db\Connection&apos;,</div><div class="line">  	&apos;dsn&apos; =&gt; &apos;mysql:host=127.0.0.1;dbname=demo&apos;,</div><div class="line">  	&apos;username&apos; =&gt; &apos;root&apos;,</div><div class="line">  	&apos;password&apos; =&gt; &apos;&apos;,</div><div class="line">  	&apos;charset&apos; =&gt; &apos;utf8&apos;,</div><div class="line">]);</div><div class="line"></div><div class="line">// create an object with two constructor parameters</div><div class="line">$object = \Yii::createObject(&apos;MyClass&apos;, [$param1, $param2]);</div></pre></td></tr></table></figure>
+<p>yii2框架的配置文件格式跟第二种调用方式的数据结构一致这样我们就知道了配置components为什么要这样配置了，我们说明下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">	&apos;class&apos; =&gt; &apos;类名&apos;,</div><div class="line">	&apos;property1&apos; =&gt; &apos;属性值1&apos;,</div><div class="line">	&apos;property2&apos; =&gt; &apos;属性值2&apos;,</div><div class="line">	...</div><div class="line">]</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      <footer class="post-footer">
+        <div class="post-tags">
+          
+            <a href="/tags/PHP-Yii2/">PHP,Yii2</a>
+          
+        </div>
+
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2016/12/21/Yii2环境搭建/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Yii2开发环境搭建</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2016/12/21/beego启动流程-SESSION/">
+        <span class="next-text nav-default">beego启动流程-SESSION</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+        </div>  
+      </main>
+
+      <footer id="footer" class="footer">
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:ofttryaj@163.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.facebook.com/ofttryaj" class="iconfont icon-facebook" title="facebook"></a>
+        
+      
+    
+      
+        
+          <a href="https://github.com/ofttryaj" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+    
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+    
+    2016
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">ofttryaj</span>
+  </span>
+</div>
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+
+
+    
+
+
+  <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.0.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.0.0"></script>
+
+  </body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="Yii2开发环境搭建"/>
+
+
+
+
+  <meta name="keywords" content="PHP,Yii2," />
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="big gang silk">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.0.0" />
+
+
+
+<link rel="canonical" href="https://ofttryaj.github.io/2016/12/21/Yii2环境搭建/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.0" />
+
+
+
+  
+
+
+
+    <title> Yii2开发环境搭建 · big gang silk </title>
+  </head>
+
+  <body>
+    <div class="container">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">big gang silk</a>
+</div>
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            Archives
+          </a>
+        </li>
+      
+      
+    </ul>
+  
+</nav>
+
+<div class="mobile-navbar">
+  <div class="mobile-header">
+    <div class="mobile-header-logo">
+      <a href="/." class="logo">big gang silk</a>
+    </div>
+
+    <div class="mobile-header-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+  <nav class="mobile-menu">
+    
+      
+      <a class="mobile-menu-item" href="/">
+        Home
+      </a>
+    
+      
+      <a class="mobile-menu-item" href="/archives/">
+        Archives
+      </a>
+    
+  </nav>
+</div>
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Yii2开发环境搭建
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          Dec 21, 2016
+        </span>
+      </div>
+    </header>
+
+    
+      <div class="post-toc" id="post-toc">
+        <h2 class="post-toc-title">Contents</h2>
+        <div class="post-toc-content">
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Yii2开发环境搭建"><span class="toc-text">Yii2开发环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Application-structure"><span class="toc-text">Application structure</span></a></li></ol></li></ol></li></ol>
+        </div>
+      </div>
+    
+
+    <div class="post-content">
+      
+        <h1 id="Yii2开发环境搭建"><a href="#Yii2开发环境搭建" class="headerlink" title="Yii2开发环境搭建"></a>Yii2开发环境搭建</h1><p>官方提供的目录架构<a href="https://github.com/yiisoft/yii2-app-advanced" target="_blank" rel="external">yii2-app-advance</a>|<a href="https://github.com/yiisoft/yii2-app-basic" target="_blank" rel="external">yii2-app-basice</a>下载release包。</p>
+<p>或者可以利用<a href="http://www.phpcomposer.com/" target="_blank" rel="external">composer</a>管理工具来创建项目，yii2依赖composer-asset-plugin插件，因此必须先安装这个插件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">这里采用全局安装，具有全局性。</div><div class="line">composer global require &quot;fxp/composer-asset-plugin:~1.1.1&quot;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">composer create-project yiisoft/yii2-app-basic basic 2.0.9</div><div class="line">or</div><div class="line">composer create-project yiisoft/yii2-app-advanced advanced 2.0.9</div></pre></td></tr></table></figure>
+<p>若是下载了官方的包，还需要经过一个步骤,进入到你的项目目录，执行下面的命令，进行安装：</p>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">composer install</div></pre></td></tr></table></figure>
+<p>这个过程可能会很漫长，国外的资源，建议翻墙。</p>
+<p>接下来还需要做一个操作，初始化yii2项目：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">./init</div><div class="line">Yii Application Initialization Tool v1.0</div><div class="line"></div><div class="line">Which environment do you want the application to be initialized in?</div><div class="line"></div><div class="line">  [0] Development</div><div class="line">  [1] Production</div><div class="line"></div><div class="line">  Your choice [0-1, or &quot;q&quot; to quit]</div></pre></td></tr></table></figure>
+<p>这有两个选项，0表示开发环境，1表示生产环境。我们本地开发的话，则选0，若线上环境则选择1，这里我们选0，选了0之后，会提示你</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Initialize the application under &apos;Development&apos; environment? [yes|no]</div></pre></td></tr></table></figure>
+<p>输入yes，看到如下的提示表明我们安装成功了，接下来就是配置Nginx/Apache环境。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">Start initialization ...</div><div class="line"></div><div class="line">   generate backend/config/main-local.php</div><div class="line">   generate backend/config/params-local.php</div><div class="line">   generate backend/web/index-test.php</div><div class="line">   generate backend/web/index.php</div><div class="line">   generate common/config/main-local.php</div><div class="line">   generate common/config/params-local.php</div><div class="line">   generate console/config/main-local.php</div><div class="line">   generate console/config/params-local.php</div><div class="line">   generate frontend/config/main-local.php</div><div class="line">   generate frontend/config/params-local.php</div><div class="line">   generate frontend/web/index-test.php</div><div class="line">   generate frontend/web/index.php</div><div class="line">   generate tests/codeception/config/config-local.php</div><div class="line">   generate yii</div><div class="line">   generate cookie validation key in backend/config/main-local.php</div><div class="line">   generate cookie validation key in frontend/config/main-local.php</div><div class="line">      chmod 0777 backend/runtime</div><div class="line">      chmod 0777 backend/web/assets</div><div class="line">      chmod 0777 frontend/runtime</div><div class="line">      chmod 0777 frontend/web/assets</div><div class="line">      chmod 0755 yii</div><div class="line">      chmod 0755 tests/codeception/bin/yii</div><div class="line"></div><div class="line">  ... initialization completed.</div></pre></td></tr></table></figure>
+<h3 id="Application-structure"><a href="#Application-structure" class="headerlink" title="Application structure"></a>Application structure</h3><p>这里我们只针对yii2-app-advance模板，advance目录结构(这里只列举了我们经常用的)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">backend  ------------- web应用后台</div><div class="line">common   ------------- 公共配置或者一些服务</div><div class="line">console  ------------- 控制台，在项目根目录执行./yii可以看到很多帮助选项，也允许开发者开发自己的命令</div><div class="line">frontend ------------- web应用前台</div></pre></td></tr></table></figure>
+<p>前台与后台目录结构是一致的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">assets      ------------ 前端资源管理包</div><div class="line">config      ------------ 应用独立配置项</div><div class="line">controllers ------------ 控制器</div><div class="line">models      ------------ model层</div><div class="line">runtime     ------------ 运行时缓存数据</div><div class="line">views       ------------ 视图层</div><div class="line">web         ------------ 这个是唯一暴露给外界的目录</div></pre></td></tr></table></figure>
+<p>console目录结构：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">config      ------------ console应用独立配置项</div><div class="line">controllers ------------ 控制器</div><div class="line">migrations  ------------ 数据库迁移文件</div><div class="line">models      ------------ model层</div><div class="line">runtime     ------------ 运行时缓存文件</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      <footer class="post-footer">
+        <div class="post-tags">
+          
+            <a href="/tags/PHP-Yii2/">PHP,Yii2</a>
+          
+        </div>
+
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2016/12/21/Yii2启动流程/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Yii2启动流程</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2016/12/21/Yii2配置文件/">
+        <span class="next-text nav-default">Yii2配置详解</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+        </div>  
+      </main>
+
+      <footer id="footer" class="footer">
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:ofttryaj@163.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.facebook.com/ofttryaj" class="iconfont icon-facebook" title="facebook"></a>
+        
+      
+    
+      
+        
+          <a href="https://github.com/ofttryaj" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+    
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+    
+    2016
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">ofttryaj</span>
+  </span>
+</div>
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+
+
+    
+
+
+  <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.0.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.0.0"></script>
+
+  </body>
+</html>

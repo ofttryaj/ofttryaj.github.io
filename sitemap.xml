@@ -2,9 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://yoursite.com/2016/12/21/hello-world/</loc>
+    <loc>https://ofttryaj.github.io/2016/12/21/beego%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B-SESSION/</loc>
     
-    <lastmod>2016-12-21T06:16:40.000Z</lastmod>
+    <lastmod>2016-12-21T07:49:38.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://ofttryaj.github.io/2016/12/21/beego%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B-%E9%85%8D%E7%BD%AE/</loc>
+    
+    <lastmod>2016-12-21T07:49:22.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://ofttryaj.github.io/2016/12/21/Yii2%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/</loc>
+    
+    <lastmod>2016-12-21T07:48:00.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://ofttryaj.github.io/2016/12/21/Yii2%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/</loc>
+    
+    <lastmod>2016-12-21T07:47:42.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://ofttryaj.github.io/2016/12/21/Yii2%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</loc>
+    
+    <lastmod>2016-12-21T07:46:53.000Z</lastmod>
     
   </url>
   

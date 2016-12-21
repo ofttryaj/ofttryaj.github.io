@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="beego启动流程-SESSION"/>
+
+
+
+
+  <meta name="keywords" content="Go,Beego," />
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="big gang silk">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.0.0" />
+
+
+
+<link rel="canonical" href="https://ofttryaj.github.io/2016/12/21/beego启动流程-SESSION/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.0" />
+
+
+
+  
+
+
+
+    <title> beego启动流程-SESSION · big gang silk </title>
+  </head>
+
+  <body>
+    <div class="container">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">big gang silk</a>
+</div>
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            Archives
+          </a>
+        </li>
+      
+      
+    </ul>
+  
+</nav>
+
+<div class="mobile-navbar">
+  <div class="mobile-header">
+    <div class="mobile-header-logo">
+      <a href="/." class="logo">big gang silk</a>
+    </div>
+
+    <div class="mobile-header-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+  <nav class="mobile-menu">
+    
+      
+      <a class="mobile-menu-item" href="/">
+        Home
+      </a>
+    
+      
+      <a class="mobile-menu-item" href="/archives/">
+        Archives
+      </a>
+    
+  </nav>
+</div>
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          beego启动流程-SESSION
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          Dec 21, 2016
+        </span>
+      </div>
+    </header>
+
+    
+      <div class="post-toc" id="post-toc">
+        <h2 class="post-toc-title">Contents</h2>
+        <div class="post-toc-content">
+          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Beego-Session"><span class="toc-text">Beego Session</span></a></li></ol>
+        </div>
+      </div>
+    
+
+    <div class="post-content">
+      
+        <h3 id="Beego-Session"><a href="#Beego-Session" class="headerlink" title="Beego Session"></a>Beego Session</h3><p>我们知道，beego在跑起来之前，调用了<strong>initBeforeHTTPRun()</strong>这个函数。beego定义了一个全局不可导出的变量<strong>hooks</strong>，这是一个切片，每个元素的类型是func() error，那么前面那个函数就往<strong>hooks</strong>切片中追加元素，追加完成之后，会遍历<strong>hooks</strong>切片，由于切片每一个元素都是函数类型，因此可以直接调用，<strong>hooks</strong>切片中有这些元素：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">func registerMime() error</div><div class="line">func registerDefaultErrorHandler() error</div><div class="line">func registerSession() error</div><div class="line">func registerTemplate() error</div><div class="line">func registerAdmin() error</div><div class="line">func registerGzip() error</div></pre></td></tr></table></figure>
+<p>以上都是在beego包下的hooks.go定义的函数，类型均为func() error，我们先来了解下beego的session包下的session.go，这个文件中定义了一些抽象的需要具体实现的相关结构，定义的相关结构：</p>
+<ul>
+<li><p><strong>provides</strong>的类型为map[string]Provider，这个跟我们之前beego的配置有点像，就是在redis，file，memory,mysql等等还有一些其他的为存储介质的具体实现中，在init函数通过session.Register函数均已注册到<strong>provides</strong>变量中；</p>
+</li>
+<li><p>两个接口分别为Store和Provider，定义了一些行为。我们以session_file.go为例，以file为存储介质的实现，定义了两个结构体FileStore和FileProvider分别实现了Store和Provider接口；</p>
+</li>
+</ul>
+<a id="more"></a>
+<pre><code>* Store接口负责session数据的处理，定义了Set(),Get(),Delete(),SessionID(),SessionRelease(),Flush()操作；
+
+* Provider接口定义了session本身的管理行为，负责生产Store，定义了SessionInit(),SessionRead(),SessionExist(),SessionRegenerate(),SessionDestroy(),SessionAll(),SessionGC()操作；
+</code></pre><ul>
+<li><p>以上两个接口只定义了抽象行为，这些具体实现都在session包下的session_*.go文件中，不同的存储介质有不同的实现，这样说会很抽象，我们来看看seesion_file.go是如何实现这两个接口，看完之后，我们对Store和Provider接口的理解会更加深入；</p>
+<ul>
+<li><p>session_file.go中定义了FileSessionStore和FileProvider两个结构体，它们分别实现了哪个接口，从名字上我就能知道了。只不过不同的存储介质结构体结构有所不同，具体如下：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">type FileSessionStore struct &#123;</div><div class="line">	// session id 唯一</div><div class="line">	sid    string</div><div class="line">	// 读写保护</div><div class="line">	lock   sync.RWMutex</div><div class="line">	// 存储值，这时候并没有真操作文件，只有调用了Store.SessionRelease()方法，才真正操作文件</div><div class="line">	values map[interface&#123;&#125;]interface&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">type FileProvider struct &#123;</div><div class="line">	// 读写保护</div><div class="line">	lock        sync.RWMutex</div><div class="line">	// session有效时间</div><div class="line">	maxlifetime int64</div><div class="line">	// session存储路径，不同的实现这个含义不同，例如mysql的savePath指的是，连接mysql的源</div><div class="line">	// 即为：dbUserName:password@tcp(ip:port)DbName?charset=utf8</div><div class="line">	savePath    string</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>FileSessionStore方法具体实现：</p>
+<ul>
+<li>Set(key, value interface{}) error</li>
+<li>Get(key interface{}) interface{}</li>
+<li>Delete(key interface{}) error</li>
+<li>Flush() error</li>
+<li>SessionID() string</li>
+<li><p>SessionRelease(w http.ResponseWriter)</p>
+<p>前面4个方法都很简单，都是针对FileSessionStore结构体本身的操作，都是加锁，做完相应的操作，然后释放锁。SessionID()直接返回fs.sid，即sessionID；最后一个方法有点复杂，就是我们上面的操作增删查之后需要去更新文件中的内容，SessionRelease()方法就是做这个的：</p>
+</li>
+<li><p>首先会用EncodeGob()（session包下的一个编码函数对应解码的是DecodeGob）对fs.values进行编码；</p>
+</li>
+<li>接着会构造session文件的路径，规则(<strong>这个规则我们后面还会用到</strong>)是这样的，我们在SessionInit()中就传入了session根路径，在这个路径下，取fs.sid第一个字符和第二个字符最后连接上fs.sid，完整路径是这个：filepder.savePath/fs.sid[0]/fs.sid[1]/fs.sid(Linux环境下)，filepder是一个全局变量，下面我们会说到；</li>
+<li>若以上的文件不存在，则创建；</li>
+<li>之后会调用File相关方法，首先会清空文件内容，文件偏移量设置为0，将编码的数据写入文件，最后关闭文件；</li>
+</ul>
+</li>
+<li><p>FileProvider方法具体实现：</p>
+<ul>
+<li>SessionInit(maxlifetime int64, savePath string) error<ul>
+<li>filepder是一个全局变量，即filepder = &amp;FileProvider{}</li>
+<li>这个方法就是初始化filepder这个变量，对filepder.maxlifetime = maxlifetime,filepder.savePath = savePath，这是FileProvider实例会注册到sessoin.providers变量中的；</li>
+</ul>
+</li>
+<li>SessionRead(sid string) (Store, error)<ul>
+<li>这个方法就是根据sessionID获取一个FileSessionStore实例，sid如何生成的之后会在session.Manager{}中看到；</li>
+<li>按照我们上面说的session存储路径规则，即fp.savePath/sid[0]/sid[1]/sid，这个文件不存在则创建，紧接着会修改这个文件的访问和修改时间；</li>
+<li>接下来调用ioutil.ReadAll(f)，把文件内容全部读入字节数组中；</li>
+<li>若读出来的内容为空，则创建一个空的make(map[interface{}]interface{})赋值给kv作为FileSessionStore values字段的值；若不为空，上面存入的时候我对值做了EncodeGob()操作，那么反过来就应该解码，即调用DecodeGob()对读出的字节数组进行解码赋值给kv；</li>
+<li>最后构造一个FileSessionStore实例，即&amp;FileSessionStore{sid: sid, values: kv}，返回；</li>
+</ul>
+</li>
+<li>SessionExist(sid string) bool<ul>
+<li>根据我们session存储路径的规则，根据os.Stat()返回的error类型的值是否为空，为空则说明不存在，否则存在；</li>
+</ul>
+</li>
+<li>SessionDestroy(sid string) error<ul>
+<li>删除相应的session存储文件；</li>
+</ul>
+</li>
+<li>SeesionGC()<ul>
+<li>gcmaxlifetime是一个全局变量，首先把fp.maxlifetime赋值给gcmaxliftime；</li>
+<li>在fp.savePath即session存储根路径下，循坏用gcpath，gcpath是自定义的一个filepath.WalkFunc类型的函数，用来删除过期的session；</li>
+<li>gcpath具体实现，如果遍历的路径是目录则不做任何处理，若是文件，则需要判断是否过期，判断过期的规则是，获取文件最后修改的时间，加上gcmaxfiletime，跟当前时间对比，如果小于当期那时间，则删除session存储文件；</li>
+</ul>
+</li>
+<li>SessionAll() int<ul>
+<li>跟GC类似，也是调用filepath.Walk(fp.save.Path, func() {})，只不过这里传入的是一个匿名函数来处理相应的逻辑；</li>
+<li>a = &amp;activeSession{}，这个也是自定义的一个结构体，用来统计session的总个数；</li>
+<li>调用a.viset()统计session存储根路径下有多少个文件；</li>
+</ul>
+</li>
+<li>SessionRegenerate(oldsid, sid string) (Store, error)<ul>
+<li>生成新的file session</li>
+<li>这个需要创建oldsid和sid相关的文件，</li>
+<li>若fp.savePath/sid[0]/sid[1]/sid文件存在则返回；</li>
+<li>若存在fp.savePath/oldsid[0]/oldsid[1]/oldsid，则把内容拷贝到fp.savePath/sid[0]/sid[1]/sid文件中；</li>
+<li>接下来会删除fp.savePath/oldsid[0]/oldsid[1]/oldsid文件，修改fp.savePath/sid[0]/sid[1]/sid文件的最后访问和修改时间；</li>
+<li>ioutil.ReadAll(fp.savePath/sid[0]/sid[1]/sid)读到字节数组中，若为空则创建一个空的make(map[interface{}]interface{})赋值给kv，否则DecodeGob()赋值给kv，最后返回&amp;FileSessionStore{sid: sid, values: kv}；</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<blockquote>
+<p>到这里我们session_file.go全部实现都说完了，其他的存储介质也都是类似的，有兴趣可以自己去了解。那么在这里就可以总结下Store和Provider的区别了</p>
+<ol>
+<li>Store定义都是对session数据的操作，Provider则定义了针对session本身的操作；</li>
+<li>FileSessionStore定义了session的读，赋值，删除，更改，清空操作，针对Provider提供的session存储文件进行文件写操作；</li>
+<li>FileProvider则提供了生成session存储文件，删除存储文件，重新生成存储文件，对过期的session回收；</li>
+<li>因此Provider会生产Store，只有经过Provider生产的Store，才能对session的数据进行相关操作，若没有Provider，sessionStore也无从谈起，更别提对session数据操作；</li>
+</ol>
+</blockquote>
+<ul>
+<li><p>我们说回session.go文件，上面只说了两个接口，那么还定义了Manager和ManagerConfig两个结构体，</p>
+<ul>
+<li>ManagerConfig是Manager需要的配置项，Manager也依赖Provider具体实现，上面我们说了session_file.go的具体实现带着这个我们来看看Manager提供的方法；</li>
+<li><p>接下来我们回到hooks.go的registerSession()函数实现</p>
+<ul>
+<li>首先判断配置项是否开启了session，若开启了则继续往下走；</li>
+<li>conf := new(session.ManagerConfig)</li>
+<li>优先读取应用配置文件app.conf中的sessionConfig，若存在则做相应的操作赋值给conf</li>
+<li>若为空则读取BConfig相应的配置项赋值给相应的conf配置项</li>
+<li>配置好了之后，调用session.NewManager(provider, conf)，这里的provider默认是memory，我们用file来代替，创建好的session.Manager赋值给GlobalSession(这个是在config.go文件中没有进行初始化的变量)全局变量。最后启用一个协程负责session过期的处理；<br>也就是在beego启动的时候，就会注册这些。</li>
+</ul>
+</li>
+<li><p>通过上面我们知道了什么时候会实例化session.Manager(providerName, cf)了，那么我来看看session.NewManager()函数的具体实现：</p>
+<ul>
+<li>从<strong>providers</strong>全局变量中获取相应的provider，我们这里传入的是file，那么在session_file.go中调用Register()函数注册到了providers，也就是能取出&amp;session.FileProvider{}；</li>
+<li>若cf.Maxlifetime == 0, 则cf.Maxlifetime = cf.Gclifetime；</li>
+<li>若允许从http headers获取sessionID，则判断cf.SessionNameInHttpHeader这个格式是否符合标准，不符合则返回；</li>
+<li>接下来会调用provider.SessionInit(cf.Maxlifetime, cf.ProviderConfig)，通过我们上面对file的SessionInit了解，就知道了，其实就是对session.FileProvider{}相关字段进行赋值，即filepder.maxlifetime = cf.Maxlifetime，filepder.savePath = cf.ProviderConfig，这里我就知道session的存储路径和有效时间都是在这里设置的；</li>
+<li>最后返回&amp;Manager{provider, cf}</li>
+</ul>
+</li>
+<li><p>在看看看Manager提供了那些可导出的方法</p>
+<ul>
+<li>SessionStart(w http.ResponseWriter, r *http.Request) (session Store, err error)<ul>
+<li>这个方法在请求到来的时候都会请求到的，只有session启动了才能进行后续的相关的操作；</li>
+<li>调用manager.getSid()这个方法是从请求中获取sessionID，若存在则，直接调用manager.provider.SessionRead()，通过前面我们了解到file的具体实现，SessionRead()就是根据sid创建相关的session存储文件，并返回一个可操作session的FileSessionStore对象；</li>
+<li>若请求中没有sessionID，则调用manager.sessionID()，这个方法生成manager.config.SessionIDLength长度的随机串；</li>
+<li>根据上面创建的sessionID，调用manager.provider.SessionRead(sid)，去的一个FileSessionStore实例赋值给session；</li>
+<li>构造&amp;http.Cookie{}，Name字段赋值为manager.config.CookieName；Value赋值为url.QueryEscape(sid)，这个是对sid进行转码，便于sid安全的用在URL查询里；Path为”/“；HttpOnly为true；Secure为manager.isSecure(r)，这个方法先判断manager.config.Secure如果为false则直接返回false，若为true，则会判断http.Request相关字段；Domain赋值为manager.config.Domain；</li>
+<li>manager.config.CookieLifeTime大于0的话，cookie.MaxAge = manager.config.CookieLifeTime，cookie.Expires赋值为当前时间加上CookieLiftTime；</li>
+<li>manager.config.EnableSetCookie若为真，则把cookie放入响应头部；</li>
+<li>接下来把cookie放入请求头中；</li>
+<li>manager.config.EnableSidInHttpHeader为真，请求头和相应头都增加manager.config.SessionNameInHttpHeader = sid；</li>
+<li>最后返回session；</li>
+</ul>
+</li>
+<li>SessionDestroy(w http.ResponseWriter, r *http.Request)<ul>
+<li>销毁session；</li>
+<li>如果manager.config.EnableSidInHttpHeader为真，则去删除请求头和响应头manager.config.SessionNameInHttpHeader；</li>
+<li>从请求头部获取名字为manager.config.CookieName的cookie，其实刚刚SessionStart()方法中我们构造的cookie放入请求头中，这里我们就能理解了；若这个cookie.Value为空，或者出错则直接返回；</li>
+<li>其实这个cookie.Value就是经过url.QueryEscape(sid)的值，所以这里有反转回来，调用url.QueryUnescape(cookie.Value)；这样就拿到了sessionID；</li>
+<li>有了sid之后，就可以调用manager.provider.SessionDestroy(sid)，本质上就是删除manager.config.ProviderConfig/sid[0]/sid[1]/sid这个文件；（filepder.savePath就是这里的ProviderConfig提供的）</li>
+<li>如果manager.config.EnableSetCookie为真，需要让Name为manager.config.CookieName的cookie失效，因此这里cookie的Expires为当前时间，意思就是立即过期，然后放入响应头中；</li>
+<li>这里整个session销毁过程就完成了；</li>
+</ul>
+</li>
+<li>GetSessionStore(sid string) (sessions Store, err error)<ul>
+<li>这个方法就简单了，就是调用manager.provider.SessionRead(sid)，这个方法上面也用到了，读取manager.config.ProviderConfig/sid[0]/sid[1]/sid中的内容，最终返回一个&amp;FileSessionStore；具体SessionRead()的实现可以看上面的介绍；</li>
+</ul>
+</li>
+<li>GC()<ul>
+<li>调用manager.provider.SessionGC()</li>
+<li>我们在hooks.go中registerSession()函数中知道了，单独起了一个协程来对过期的session进行回收，这里用到了time.AfterFunc()，在manager.config.Gclifetime之间之后，就会调用自己，因为这个协程不会退出，因此可以一直对过期的session回收；</li>
+</ul>
+</li>
+<li>SessionRegenerateID(w http.ResponseWriter, r *http.Request) (session Store)<ul>
+<li>根据保存在请求头中的FileSessionStore，重新生成一个session；</li>
+<li>调用manager.sessionID()，生成一个新的sessionID，sid；</li>
+<li>这里跟SessionStart()有点类似，不过这里会先从请求头中获取名称为manager.config.CookieName的cookie，赋值为cookie，若cookie.Value == “”，则调用manager.provider.SessionRead(sid)，构造相应的&amp;http.Cookie{}，以备放入请求（响应）头中；若cookie.Value不为空的话，那么说明oldsid=url.QueryUnescape(cookie.Value)就不为空，此时就会调用manager.provider.SessionRegenerate(oldsid, sid)；</li>
+<li>接下来的步骤跟SessionStart()中一样，就不在重复了；最后返回session；</li>
+</ul>
+</li>
+<li>GetActiveSession() int<ul>
+<li>获取有效的session数量；</li>
+<li>调用manager.provider.SessionAll()</li>
+</ul>
+</li>
+<li>SetSecure(secure bool)<ul>
+<li>这个方法就是设置https cookie；</li>
+<li>manager.config.Secure = secure；</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>这里就全部说完了，注意我们这里仅仅是以session_file.go为例，使得我们的内容更具体化，当然你也可以结合session_mem.go来理解，但是都不会脱离Store和Provider这两个接口的，只是具体实现的方式有所不同，定义的*Store和*Provider结构体不一样罢了。</p>
+</blockquote>
+
+      
+    </div>
+
+    
+      <footer class="post-footer">
+        <div class="post-tags">
+          
+            <a href="/tags/Go-Beego/">Go,Beego</a>
+          
+        </div>
+
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2016/12/21/Yii2配置文件/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Yii2配置详解</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2016/12/21/beego启动流程-配置/">
+        <span class="next-text nav-default">beego启动流程-配置</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+        </div>  
+      </main>
+
+      <footer id="footer" class="footer">
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:ofttryaj@163.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.facebook.com/ofttryaj" class="iconfont icon-facebook" title="facebook"></a>
+        
+      
+    
+      
+        
+          <a href="https://github.com/ofttryaj" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+    
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+    
+    2016
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">ofttryaj</span>
+  </span>
+</div>
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+
+
+    
+
+
+  <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.0.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.0.0"></script>
+
+  </body>
+</html>

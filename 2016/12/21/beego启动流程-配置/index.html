@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="beego启动流程-配置"/>
+
+
+
+
+  <meta name="keywords" content="go,beego," />
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="big gang silk">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.0.0" />
+
+
+
+<link rel="canonical" href="https://ofttryaj.github.io/2016/12/21/beego启动流程-配置/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.0" />
+
+
+
+  
+
+
+
+    <title> beego启动流程-配置 · big gang silk </title>
+  </head>
+
+  <body>
+    <div class="container">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">big gang silk</a>
+</div>
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            Archives
+          </a>
+        </li>
+      
+      
+    </ul>
+  
+</nav>
+
+<div class="mobile-navbar">
+  <div class="mobile-header">
+    <div class="mobile-header-logo">
+      <a href="/." class="logo">big gang silk</a>
+    </div>
+
+    <div class="mobile-header-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+  <nav class="mobile-menu">
+    
+      
+      <a class="mobile-menu-item" href="/">
+        Home
+      </a>
+    
+      
+      <a class="mobile-menu-item" href="/archives/">
+        Archives
+      </a>
+    
+  </nav>
+</div>
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          beego启动流程-配置
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          Dec 21, 2016
+        </span>
+      </div>
+    </header>
+
+    
+
+    <div class="post-content">
+      
+        <p>在beego包下有一个config.go文件，这个文件定义了beego的配置相关的结构体，有以下一些结构体：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">// 这是主配置结构，包含字段和Listen，WebConfig，LogConfig一些结构</div><div class="line">type Config struct &#123;</div><div class="line">	...</div><div class="line">	Listen              Listen</div><div class="line">	WebConfig           WebConfig</div><div class="line">	Log                 LogConfig</div><div class="line">&#125;</div><div class="line">// 与http和https相关的配置</div><div class="line">type Listen struct &#123;</div><div class="line">	...</div><div class="line">&#125;</div><div class="line">// web相关的配置，包含一个SessionConfig结构</div><div class="line">type WebConfig struct &#123;</div><div class="line">	...</div><div class="line">	Session                SessionConfig</div><div class="line">&#125;</div><div class="line">// seesion相关的配置</div><div class="line">type SessionConfig struct &#123;</div><div class="line">	...</div><div class="line">&#125;</div><div class="line">// 日志相关的配置</div><div class="line">type LogConfig struct &#123;</div><div class="line">	...</div><div class="line">&#125;</div><div class="line">// 这个结构体用于解析配置文件，目前beego只用到了ini provider，等下可以从下面的变量知道这一点</div><div class="line">type beegoAppConfig struct &#123;</div><div class="line">	// 这个接口定义了一些方法集，这些方法用于从配置文件中获取和设置值</div><div class="line">	// 比如beego的config包下面实现了这个接口的有xml，yaml，ini，json等</div><div class="line">	innerConfig config.Configer</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>接下来定义了4个可导出的全局变量和两个不可导出的全局变量，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">var (</div><div class="line">	// 应用的主体配置，即我们用bee工具新建的或者手动创建的应用</div><div class="line">	BConfig *Config</div><div class="line">	// beegoAppConfig依赖innerConfig字段来从配置文件中获取和设置值，即实现了config.Conffiger接口的对象</div><div class="line">	// 从下面的newAppConfig()函数中可以了解到，innerConfig就是config.IniConfig&#123;&#125;的实例</div><div class="line">	// 具体如何实现，可以去了解config.IniConfig具体方法的实现</div><div class="line">	AppConfig *beegoAppConfig</div><div class="line">	// 应用的绝对路径</div><div class="line">	AppPath string</div><div class="line">	// session.Manager的实例</div><div class="line">	GlobalSessions *session.Manager</div><div class="line">	// 应用配置文件的路径</div><div class="line">	appConfigPath string</div><div class="line">	// 这个变量是没有办法从外部更改的，除非强行改这里的代码，默认是ini provider</div><div class="line">	appConfigProvider = &quot;ini&quot;</div><div class="line">)</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>以上的全局变量(除了GlobalSeesions没有进行赋值)都在该文件中的init函数进行了赋值：</p>
+<blockquote>
+<p><strong>我们把beego编译好的可执行文件，这个可执行文件就是编译我们新建的App所生成的，暂且称为服务器启动命令</strong></p>
+</blockquote>
+<ol>
+<li>首先调用了newConfig函数，这个函数返回一个<em>Config对象，进行了beego框架默认的配置赋值，并赋值给 <strong>BConfig</strong> 变量，这里面的RecoverPanic和RecoverFunc两个字段，表明是否从panic中恢复以及指定了recover函数，func recoverPanic()，这个函数就beego默认的recover函数，即打印出堆栈信息。当然我们也可以自定义recover函数，<em>*BConfig</em></em> 是一个全局可导出的变量，因此可以通过在服务器启动之前动态赋值；</li>
+<li><p>接下来，设置当前 <strong>AppPath</strong> ，和当前工作路径workPath，AppPath就是服务器启动命令所在的绝对路径，workPath就是运行服务器启动命令时所在的路径，即当前路径。接着会检测AppPath和workPath两个目录下是否存在app.conf配置文件，会优先从workPath中判断，若没有则继续判断AppPath是否存在，任何一个存在则把相应的文件路径赋值给 <strong>appConfigPath</strong> ，若都不存在app.conf文件，会为 <strong>AppConfig</strong> 赋值为 <strong>&amp;beegoAppConfig{innerConfig: config.NewFakeConfig()}</strong> ；</p>
+<pre><code>针对AppPath和workPath举个例子来说明下，我的GOPATH是/Users/llrve/workspaces/go/wego，目录结构如下:
+wego
+  |- bin
+  |- pkg
+  |- src
+      |- github.com 第三方包
+      |- gopkg.in 第三方包
+      |- wechat bee工具创建的App
+               |- ... 不全部列举出来
+               |- main.go 入口文件
+               |- wechat 这个就是服务器启动命令
+当在/Users/llrve/workspaces/go/wego目录，这样启动src/wechat/wechat,
+这时候AppPath是/Users/llrve/workspaces/go/wego/src/wechat，workPath则是/Users/llrve/workspaces/go/wego，
+当在/Users/llrve/workspaces/go/wego/src/wechat目录下，
+这样启动./wechat，AppPath和workPath都是/Users/llrve/workspaces/go/wego/src/wechat
+
+因此AppPath跟服务器启动命令的位置有关
+</code></pre></li>
+<li><p>若存在则会去解析这个配置文件，调用当前文件中的parseConfig()函数，这个函数执行流程如下：</p>
+<ul>
+<li>调用当前文件中的newAppConfig函数即newAppConfig(appConfigProvider, appConfigPath)，注意这两个参数，appConfigProvider是前面定义的全局变量，其值为”ini”，appConfigPath使我们经过判断获取的app.conf文件的路径，这个函数返回一个&amp;beegoAppConfig{ac}，若没有错误，则赋值给 <strong>AppConfig</strong>，到这里，上面列举的所有全局变量均已赋值；<ul>
+<li>我们来看下beego框架中config包下的ini.go文件中，有一个init函数，这个函数只有一行代码，就是调用当前包的一个函数Register(“ini”, &amp;IniConfig{});这个函数签名func Register(name string, adapter Config)，就是把&amp;IniConfig赋值给config包下的不可导出adapters map[string]Config中，即adapters[“ini”] = &amp;IniConfig{}，显然IniConfig实现了Config接口；</li>
+<li>上面说了如何注册配置解析，接下来我们来看看newAppConfig()函数，首先调用config.NewConfig(“init”, AppPath/app.conf)，这个函数其实就是从config包的adapters变量中获取一个adapter，即adapters[“ini”]，上面我们看到beego如何注册一个IniConfig adapter，这里就能理解了，接着就调用了IniConfig.Parse(appConfPath)，这个方法返回值(Configer，error)，我们知道IniConfig.Parse方法返回的是config.IniConfigContainer，这个结构体也实现了config.Configer接口，因此把它赋值给beegoAppConfig.innerConfig也就合理了；</li>
+</ul>
+</li>
+<li>接下来调用当前文件中的assignConfig函数，assignConfig(ac config.Configer)，AppConfig的类型是beegoAppConfig，而beegoAppConfig实现了config.Configer接口，assignConfig函数做了以下两类操作：<ul>
+<li>读取app.conf配置文件的配置项，追加或覆盖到配置相应的字段中；<ul>
+<li>若配置了环境变量os.Getenv(“BEEGO_RUNMODE”)，优先使用而这个，否则获取appConfigPath文件中配置的RunMode，若配置了的话，就覆盖BConfig.RunMode字段；之后会对几个字段进行特别的处理，因为这些字段的类型有点复杂，所以单独处理，BConfig.WebConfig.StaticDir，BConfig.WebConfig.StaticExtensionsToGzip，BConfig.Log.Outputs，即读取app.conf配置文件的配置内容，覆盖或追加到相应的字段中；</li>
+<li>剩下的就是调用assignSingleConfig函数，对BConfig，BConfig.Listen，BConfig.WebConfig，BConfig.Log，BConfig.WebConfig.Session类型为bool，string，int，int64的字段替换为app.conf配置文件中相应的配置内容；</li>
+</ul>
+</li>
+<li>设置日志操作；</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>这样beego配置相关的都完成了，包括一些全局变量的赋值操作，配置的初始化以及将应用的配置信息覆盖或追加到相应的字段中，接下来就可以读取配置信息，进行相关的操作了。</p>
+</blockquote>
+
+      
+    </div>
+
+    
+      <footer class="post-footer">
+        <div class="post-tags">
+          
+            <a href="/tags/go-beego/">go,beego</a>
+          
+        </div>
+
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2016/12/21/beego启动流程-SESSION/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">beego启动流程-SESSION</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+  </nav>
+
+      </footer>
+    
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+        </div>  
+      </main>
+
+      <footer id="footer" class="footer">
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:ofttryaj@163.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.facebook.com/ofttryaj" class="iconfont icon-facebook" title="facebook"></a>
+        
+      
+    
+      
+        
+          <a href="https://github.com/ofttryaj" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+    
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+    
+    2016
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">ofttryaj</span>
+  </span>
+</div>
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+
+
+    
+
+
+  <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.0.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.0.0"></script>
+
+  </body>
+</html>

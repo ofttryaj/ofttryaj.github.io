@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="Yii2启动流程"/>
+
+
+
+
+  <meta name="keywords" content="PHP,Yii2," />
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="big gang silk">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.0.0" />
+
+
+
+<link rel="canonical" href="https://ofttryaj.github.io/2016/12/21/Yii2启动流程/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.0" />
+
+
+
+  
+
+
+
+    <title> Yii2启动流程 · big gang silk </title>
+  </head>
+
+  <body>
+    <div class="container">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">big gang silk</a>
+</div>
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            Archives
+          </a>
+        </li>
+      
+      
+    </ul>
+  
+</nav>
+
+<div class="mobile-navbar">
+  <div class="mobile-header">
+    <div class="mobile-header-logo">
+      <a href="/." class="logo">big gang silk</a>
+    </div>
+
+    <div class="mobile-header-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+  <nav class="mobile-menu">
+    
+      
+      <a class="mobile-menu-item" href="/">
+        Home
+      </a>
+    
+      
+      <a class="mobile-menu-item" href="/archives/">
+        Archives
+      </a>
+    
+  </nav>
+</div>
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Yii2启动流程
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          Dec 21, 2016
+        </span>
+      </div>
+    </header>
+
+    
+      <div class="post-toc" id="post-toc">
+        <h2 class="post-toc-title">Contents</h2>
+        <div class="post-toc-content">
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Yii2启动流程"><span class="toc-text">Yii2启动流程</span></a></li></ol>
+        </div>
+      </div>
+    
+
+    <div class="post-content">
+      
+        <h1 id="Yii2启动流程"><a href="#Yii2启动流程" class="headerlink" title="Yii2启动流程"></a>Yii2启动流程</h1><p>通过上次的Yii2开发环境搭建的目录结构介绍，暴露给外界web目录，该目录下有一个index.php入口文件，那么所有的请求都是从这个入口文件开始的。具体来看看入口文件的代码。</p>
+<blockquote>
+<p><strong>这里我们只说到Application的实例化过程，具体run这一过程会专门说的。</strong></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">// 我们在对项目进行init的时候，选择的是开发环境，因此debug为ture，env为dev</div><div class="line">defined(&apos;YII_DEBUG&apos;) or define(&apos;YII_DEBUG&apos;, true);</div><div class="line">defined(&apos;YII_ENV&apos;) or define(&apos;YII_ENV&apos;, &apos;dev&apos;);</div><div class="line"></div><div class="line">// 引入composer的自动加载文件</div><div class="line">require(__DIR__ . &apos;/../../vendor/autoload.php&apos;);</div><div class="line">// 引入了Yii2的启动文件，这个文件做了以下几件事情</div><div class="line">// 1. 注册了Yii2自动加载机制，并优先使用Yii2自动加载机制</div><div class="line">// 2. 引入了classes.php文件，限定名称 =&gt; 类的物理路径之间的映射关系</div><div class="line">// 3. Yii::$container，实例化这个依赖注入容器，在一次请求过程中，这个属性是全局唯一的，这个依赖注入容器以后会详细说明</div><div class="line">require(__DIR__ . &apos;/../../vendor/yiisoft/yii2/Yii.php&apos;);</div><div class="line">// 这个文件会向Yii::$aliases追加@common,@frontend,@backend,@console</div><div class="line">// 与之相对应的物理路径，当然我们也可以根据需要添加相应的映射</div><div class="line">require(__DIR__ . &apos;/../../common/config/bootstrap.php&apos;);</div><div class="line">// 与上面的文件功能一致，这个是各自应用独有的，上面是每个应用公用的</div><div class="line">require(__DIR__ . &apos;/../config/bootstrap.php&apos;);</div><div class="line"></div><div class="line">// 整理出yii\web\Application类所需要的格式的配置</div><div class="line">// 从这几个合并的顺序可以看出，应用下的配置会覆盖公共配置</div><div class="line">// -local.php会覆盖.php配置</div><div class="line">$config = yii\helpers\ArrayHelper::merge(</div><div class="line">    require(__DIR__ . &apos;/../../common/config/main.php&apos;),</div><div class="line">    require(__DIR__ . &apos;/../../common/config/main-local.php&apos;),</div><div class="line">    require(__DIR__ . &apos;/../config/main.php&apos;),</div><div class="line">    require(__DIR__ . &apos;/../config/main-local.php&apos;)</div><div class="line">);</div><div class="line"></div><div class="line">// 实例化web application实例</div><div class="line">$application = new yii\web\Application($config);</div><div class="line">// 运行，就是这么优美地运行起来了</div><div class="line">$application-&gt;run();</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>在了解yii\web\Application实例化过程之前，我们先看看yii Application类都继承了哪些基类，首先Application类也分两大类：</p>
+<ol>
+<li>yii\console\Application</li>
+<li>yii\web\Application</li>
+</ol>
+<p>这两个类都继承了<strong>yii\base\Application</strong>，这个类是一个抽象类，目前知道这些就OK了，base Application集成了<strong>yii\base\Module</strong>，继续往下走，base Module继承了<strong>yii\di\ServiceLocator</strong>，di ServiceLocator继承了<strong>yii\base\Component</strong>，最后base Component继承了<strong>yii\base\Ojbect</strong>，在yii框架中这是所有类的基类，那么连起来就是这样的，我用箭头来表示继承关系：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yii\web\Application -&gt;yii\base\Application-&gt;yii\base\Module -&gt;yii\di\ServiceLocator -&gt;yii\base\Component -&gt;yii\base\Object</div></pre></td></tr></table></figure>
+<p>当运行到new yii\web\Application($config)的时候，我们了解了类的继承关系之后，就知道会调用yii\base\Application类的构造方法，具体代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public function __construct($config = [])</div><div class="line">&#123;</div><div class="line">	// 这里Yii静态属性$app的就是当前运行的yii\web\Application实例</div><div class="line">    Yii::$app = $this;</div><div class="line">    static::setInstance($this);</div><div class="line"></div><div class="line">    $this-&gt;state = self::STATE_BEGIN;</div><div class="line">	// 对$config进行处理，以下会说到具体做了什么</div><div class="line">    $this-&gt;preInit($config);</div><div class="line">	// 注册错误处理机制</div><div class="line">    $this-&gt;registerErrorHandler($config);</div><div class="line"></div><div class="line">	// 这里跳过了Module的构造方法，而是直接调用了Object的构造方法</div><div class="line">    Component::__construct($config);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>yii\base\Ojbect的构造方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">// 这个方法很简单，就是传入一个数组，或者什么都不传入，如果这个数组不为空，则调用</div><div class="line">// Yii::configure($this, $config)方法，在这里$this即为yii\web\Application的一个实例</div><div class="line">// 接下来调用init()方法</div><div class="line">public function __construct($config = [])</div><div class="line">&#123;</div><div class="line">    if (!empty($config)) &#123;</div><div class="line">        Yii::configure($this, $config);</div><div class="line">    &#125;</div><div class="line">    $this-&gt;init();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Yii::configure()方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// 这里的$object就是上面说的$this，这里给$object的$name属性赋值$value</div><div class="line">// 那么$object可能不存在$name属性，这里yii框架应用了PHP的模式方法__set()方法</div><div class="line">// 当$name属性不存在时，则会自动调用__set()方法，这个方法在yii\base\Component类中定义了，这里就我们就不详细讨论这个方法，我只要知道，如果定义了$name的setter方法就调用这个setter方法</div><div class="line">public static function configure($object, $properties)</div><div class="line">&#123;</div><div class="line">    foreach ($properties as $name =&gt; $value) &#123;</div><div class="line">        $object-&gt;$name = $value;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return $object;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>既然是启动，我们通过运行时能知道$properties这个数组的数组结构，我们只要知道结构，具体内容<a href="http://aj.gitgang.com/?p=96" target="_blank" rel="external">可以参照yii2配置详解</a>，结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">	// [vendorPath] =&gt; &apos;vendorPath&apos;,</div><div class="line">	[components] =&gt; [一个一个组件],</div><div class="line">	[id] =&gt; &apos;应用ID&apos;,</div><div class="line">	// [basePath] =&gt; &apos;应用根目录&apos;,</div><div class="line">	[bootstrap] =&gt; [],</div><div class="line">	[controllerNamespace] =&gt; &apos;控制器命名空间&apos;,</div><div class="line">	[params] =&gt; &apos;配置参数&apos;,</div><div class="line">	[modules] =&gt; [一个一个模块]</div><div class="line">]</div></pre></td></tr></table></figure>
+<p>这个结构就是通过yii\helpers\ArrayHelper::merge()合并之后的配置，但是之后，被yii\base\Appliction-&gt;preInit()方法处理，若存在，则去掉数组的basePath，vendorPath，runtimePath，timeZone这些索引。（以上注释了的就表示去掉了），preInit()除了做了以上操作，还对配置文件配置的components跟web application和base application内置的核心组件进行了合并，合并规则是这样的，若配置文件不存在内置的组件，则直接追加到$config组件相应的部分，若存在，但是没有设置class索引，则把内置组件class赋值给相应的组件class。</p>
+<p>在知道了$properties数据结构之后，我们在回到Yii::configure()方法，对$properties进行遍历：</p>
+<ol>
+<li>当遍历到components时，会调用yii\di\ServiceLocator-&gt;setComponents(),这个方法会通过ServiceLocator-&gt;set()方法把我们刚刚合并好的组件一个一个的注册到yii\di\ServiceLocator-&gt;_definitions属性，这个类还有另一个属性_components,当通过ServiceLocator-&gt;get()方法获取组件实例的时候会往_components属性追加组件实例；</li>
+<li>当遍历到id，bootstrap，controllerNamespace，params这些因为Application均有这些属性，因此直接赋值</li>
+<li>当遍历到modules时，则会调用yii\base\Module-&gt;setModules()方法，这个方法会通过yii\base\Module-&gt;setModule()往yii\base\Module-&gt;_moudles属性追加模块，同样也可以通过yii\base\Module-&gt;getModule()来获取模块，与此同时，如果获取的不是一个yii\base\Module实例则会进行实例化，实例化之后会通过yii\base\Module-&gt;setInstance()方法追加到Yii::$app-&gt;loadedModules[get_class($instance)] = $instance</li>
+</ol>
+<p>到这里一个yii\web\Application实例就完成了，接下来就是调用init()方法了，我们通过类的继承关系知道，yii\base\Application重写了yii\base\Object的init方法，这个方法调用yii\web\Applicatin-&gt;bootstrap()方法，这个bootstrap方法，设置了两个@webroot和@web两个别名，直接就调用了yii\base\Application-&gt;bootstrap()方法，具体代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line">protected function bootstrap()</div><div class="line">&#123;</div><div class="line">    if ($this-&gt;extensions === null) &#123;</div><div class="line">    	// 得到的就是你的yii框架的$vendorPath/yiisoft/extensions.php</div><div class="line">    	// 具体有什么内容可以去看看，$vendorPath就是你的vendor目录路径</div><div class="line">        $file = Yii::getAlias(&apos;@vendor/yiisoft/extensions.php&apos;);</div><div class="line">        // 这个PHP文件就返回一个数组</div><div class="line">        $this-&gt;extensions = is_file($file) ? include($file) : [];</div><div class="line">    &#125;</div><div class="line">    // 遍历每一个扩展</div><div class="line">    foreach ($this-&gt;extensions as $extension) &#123;</div><div class="line">        if (!empty($extension[&apos;alias&apos;])) &#123;</div><div class="line">            foreach ($extension[&apos;alias&apos;] as $name =&gt; $path) &#123;</div><div class="line">            	// 若存在别名索引，则向Yii追加一个别名以及目录路径的映射</div><div class="line">                Yii::setAlias($name, $path);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        // 若存在bootstrap索引，则实例化组件</div><div class="line">        if (isset($extension[&apos;bootstrap&apos;])) &#123;</div><div class="line">            $component = Yii::createObject($extension[&apos;bootstrap&apos;]);</div><div class="line">            // 若组件实现了BootstrapInterface接口，则调用bootstrap()方法启动</div><div class="line">            if ($component instanceof BootstrapInterface) &#123;</div><div class="line">                Yii::trace(&apos;Bootstrap with &apos; . get_class($component) . &apos;::bootstrap()&apos;, __METHOD__);</div><div class="line">                $component-&gt;bootstrap($this);</div><div class="line">            &#125; else &#123;</div><div class="line">                Yii::trace(&apos;Bootstrap with &apos; . get_class($component), __METHOD__);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    foreach ($this-&gt;bootstrap as $class) &#123;</div><div class="line">        $component = null;</div><div class="line">        if (is_string($class)) &#123;</div><div class="line">            // yii\di\ServiceLocator-&gt;has()方法从当前类的两个属性判断是否存在</div><div class="line">            // 即_components和_definitions</div><div class="line">            if ($this-&gt;has($class)) &#123;</div><div class="line">            	// 若存在属性中，则调用yii\di\ServiceLocator-&gt;get()获取</div><div class="line">                $component = $this-&gt;get($class);</div><div class="line">            &#125; elseif ($this-&gt;hasModule($class)) &#123;</div><div class="line">            	// 调用yii\base\Module-&gt;hasModule()方法判断是否存在</div><div class="line">                //  若存在则调用yii\base\Module-&gt;getModule()获取</div><div class="line">                $component = $this-&gt;getModule($class);</div><div class="line">            &#125; elseif (strpos($class, &apos;\\&apos;) === false) &#123;</div><div class="line">                throw new InvalidConfigException(&quot;Unknown bootstrapping component ID: $class&quot;);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        // 若$component为null，则直接调用Yii::createOjbect()方法直接创建</div><div class="line">        if (!isset($component)) &#123;</div><div class="line">            $component = Yii::createObject($class);</div><div class="line">        &#125;</div><div class="line">		// 若$component实现了BootstrapInterface接口则启动</div><div class="line">        if ($component instanceof BootstrapInterface) &#123;</div><div class="line">            Yii::trace(&apos;Bootstrap with &apos; . get_class($component) . &apos;::bootstrap()&apos;, __METHOD__);</div><div class="line">            $component-&gt;bootstrap($this);</div><div class="line">        &#125; else &#123;</div><div class="line">            Yii::trace(&apos;Bootstrap with &apos; . get_class($component), __METHOD__);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>至此，一个可运行的Application实例以及一些额外的扩展已经完全就绪了。这里还有处理错误机制没有仔细说，这个就是调用PHP函数注册yii2自定义的错误处理机制，这些就很简单了，这里篇幅有限就不再啰嗦了。</p>
+</blockquote>
+
+      
+    </div>
+
+    
+      <footer class="post-footer">
+        <div class="post-tags">
+          
+            <a href="/tags/PHP-Yii2/">PHP,Yii2</a>
+          
+        </div>
+
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2016/12/21/Yii2环境搭建/">
+        <span class="next-text nav-default">Yii2开发环境搭建</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+        </div>  
+      </main>
+
+      <footer id="footer" class="footer">
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:ofttryaj@163.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.facebook.com/ofttryaj" class="iconfont icon-facebook" title="facebook"></a>
+        
+      
+    
+      
+        
+          <a href="https://github.com/ofttryaj" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+    
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+    
+    2016
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">ofttryaj</span>
+  </span>
+</div>
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+
+
+    
+
+
+  <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.0.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.0.0"></script>
+
+  </body>
+</html>
